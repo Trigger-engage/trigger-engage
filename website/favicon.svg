@@ -1,5 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Trigger Engage">
-  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5ff0bd"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs>
-  <rect width="64" height="64" rx="15" fill="url(#g)"/>
-  <text x="32" y="43" font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif" font-size="29" font-weight="700" text-anchor="middle" fill="#04120b">TE</text>
+  <defs>
+    <linearGradient id="emerald" x1="10" y1="7" x2="54" y2="58" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7af7ca"/>
+      <stop offset="0.52" stop-color="#34d399"/>
+      <stop offset="1" stop-color="#18b981"/>
+    </linearGradient>
+    <radialGradient id="shine" cx="0" cy="0" r="1" gradientTransform="translate(17 12) rotate(49) scale(47)">
+      <stop stop-color="#fff" stop-opacity="0.32"/>
+      <stop offset="0.55" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="64" height="64" rx="15" fill="url(#emerald)"/>
+  <rect x="1" y="1" width="62" height="62" rx="14" fill="none" stroke="#d9fff1" stroke-opacity="0.34" stroke-width="2"/>
+  <rect width="64" height="64" rx="15" fill="url(#shine)"/>
+
+  <!-- A custom TE monogram: solid geometry stays crisp at favicon sizes. -->
+  <path fill="#061710" d="M11 17h21v7h-7v23h-7V24h-7V17Zm25 0h18v7H43v5h9v6h-9v5h11v7H36V17Z"/>
+  <circle cx="32" cy="32" r="2.5" fill="#e5fff5"/>
 </svg>
