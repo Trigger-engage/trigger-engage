@@ -1,0 +1,13 @@
+# https://triggerengage.com robots
+User-agent: *
+Allow: /
+
+# Well-behaved AI crawlers welcome; see /llms.txt for a machine-readable guide.
+User-agent: GPTBot
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+
+Sitemap: https://triggerengage.com/sitemap.xml

@@ -1,0 +1,18 @@
+# Trigger Engage
+
+> Open-source, self-hostable, event-based email, SMS & push automation for Laravel — a free alternative to hosted lifecycle-messaging platforms like Customer.io. Fire an event from your app, build the journey visually, and let the engine deliver, with no per-user bill.
+
+Trigger Engage is MIT-licensed. Run it standalone or embed the whole dashboard and engine inside an existing Laravel app with one Composer command (`composer require trigger-engage/server`). It includes a visual journey builder, behavioral segments that recompute themselves, A/B testing, anonymous-to-identified profile merge, and a time-series analytics dashboard. Channels: email (SMTP, SES, Mailgun, Postmark), SMS (Termii), and push (OneSignal). The Laravel SDK is fail-open: `identify()` and `event()` never throw into your app.
+
+## Product
+- [Landing page](https://triggerengage.com/): what Trigger Engage is, features, and pricing (free)
+- [Server / platform (GitHub)](https://github.com/Trigger-engage/server): the API, automation engine, and dashboard
+- [Laravel SDK (GitHub)](https://github.com/Trigger-engage/laravel-sdk): identify/track client with a test fake
+- [Documentation](https://github.com/Trigger-engage/server/tree/main/docs): concepts, guides, HTTP API reference
+
+## Blog
+- [Customer.io Alternatives: 6 Options for 2026](https://triggerengage.com/blog/customer-io-alternatives.html): how the main lifecycle-messaging tools compare on price, channels, and self-hosting
+- [How to Send Event-Based Emails in Laravel](https://triggerengage.com/blog/event-based-emails-laravel.html): a step-by-step tutorial, DIY vs an automation engine
+- [Lifecycle Email Sequences](https://triggerengage.com/blog/lifecycle-email-sequences.html): onboarding, retention, and win-back flows with examples
+- [A/B Testing Emails](https://triggerengage.com/blog/ab-testing-emails-guide.html): what to test, how to size a test, and how to read results
+- [Behavioral Segmentation](https://triggerengage.com/blog/behavioral-segmentation.html): building dynamic, self-updating audiences
