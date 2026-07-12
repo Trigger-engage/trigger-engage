@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Canonical / OG base URL: https://triggerengage.com -->
+<title>Why I Built Trigger Engage | Trigger Engage</title>
+<meta name="description" content="The story behind Trigger Engage — why I built an open-source, self-hostable customer engagement platform after years of scaling products like Mytherapist.ng and OpinionPadi.">
+<link rel="canonical" href="https://triggerengage.com/blog/why-i-built-trigger-engage.html">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Why I Built Trigger Engage">
+<meta property="og:description" content="The story behind Trigger Engage — why I built an open-source, self-hostable customer engagement platform after years of scaling my own products.">
+<meta property="og:url" content="https://triggerengage.com/blog/why-i-built-trigger-engage.html">
+<meta property="article:published_time" content="2026-07-12">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Why I Built Trigger Engage">
+<meta name="twitter:description" content="The story behind Trigger Engage — why I built an open-source, self-hostable customer engagement platform after years of scaling my own products.">
+<link rel="stylesheet" href="blog.css">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Why I Built Trigger Engage", "description": "The story behind Trigger Engage — why I built an open-source, self-hostable customer engagement platform after years of scaling products like Mytherapist.ng and OpinionPadi.", "datePublished": "2026-07-12", "dateModified": "2026-07-12", "author": {"@type": "Person", "name": "Afolayan", "jobTitle": "Founder, Trigger Engage"}, "publisher": {"@type": "Organization", "name": "Trigger Engage"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://triggerengage.com/blog/why-i-built-trigger-engage.html"}, "keywords": "why I built Trigger Engage, founder story, open source customer engagement, Customer.io alternative, self-hosted messaging", "image": "https://triggerengage.com/assets/blog/founder-story.png"}
+</script>
+<meta property="og:site_name" content="Trigger Engage">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://triggerengage.com/assets/blog/founder-story.png">
+<meta property="og:image:width" content="2000">
+<meta property="og:image:height" content="1125">
+<meta property="og:image:alt" content="Founder's note — the tool I wished existed while scaling my own products">
+<meta name="twitter:image" content="https://triggerengage.com/assets/blog/founder-story.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#070b14">
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/instrument-sans-600.woff2" crossorigin>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://triggerengage.com/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://triggerengage.com/blog/"}, {"@type": "ListItem", "position": 3, "name": "Why I Built Trigger Engage", "item": "https://triggerengage.com/blog/why-i-built-trigger-engage.html"}]}
+</script>
+</head>
+<body>
+<header class="nav"><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><span class="mark">TE</span><span>Trigger&nbsp;Engage</span></a>
+  <nav class="nav-links" aria-label="Primary">
+    <a href="../index.html#features">Features</a>
+    <a href="../index.html#pricing">Pricing</a>
+    <a href="https://github.com/Trigger-engage/server/tree/main/docs">Docs</a>
+    <a href="index.html" aria-current="page">Blog</a>
+  </nav>
+  <div class="nav-cta"><a class="btn btn-primary" href="https://github.com/Trigger-engage/server/blob/main/docs/INSTALLATION.md">Get started</a></div>
+</div></header>
+<main>
+  <div class="article">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="../index.html">Home</a> &rsaquo; <a href="index.html">Blog</a> &rsaquo; Founder&rsquo;s note</nav>
+    <header class="article-head">
+      <div class="kicker">Founder&rsquo;s note</div>
+      <h1>Why I Built Trigger Engage</h1>
+      <div class="meta"><span>July 12, 2026</span><span class="dot"></span><span>5 min read</span><span class="dot"></span><span>Afolayan, Founder</span></div>
+    </header>
+    <article class="prose">
+<p class="lead">I&rsquo;ve spent the last few years building products people actually use. Most people know me through <strong>Mytherapist.ng</strong>, Africa&rsquo;s fastest way to access quality mental health support, and then <strong>OpinionPadi</strong>, our user-led marketing research platform. Outside those, I&rsquo;ve also helped other startups build and ship products through <strong>MixedFraction</strong>, my dev agency. Across all that work, one problem kept showing up.</p>
+<figure class="post-fig"><img src="../assets/blog/founder-story.png" alt="Founder's note: the tool I wished existed while scaling Mytherapist.ng, OpinionPadi and MixedFraction — now Trigger Engage" loading="lazy" width="2000" height="1125"><figcaption>The tool I kept wishing existed while scaling my own products &mdash; so I built it.</figcaption></figure>
+
+<h2>The problem that kept showing up</h2>
+<p>It is still too hard to find a simple, affordable way to onboard users, nurture them, and communicate with them based on what they actually do inside your product.</p>
+<p>Most tools still treat communication like a newsletter problem.</p>
+<blockquote>Write an email.<br>Send it to everyone.<br>&hellip; and then hope it lands well.</blockquote>
+<p>But years of scaling software taught me that product communication does not work like that. Things happen inside a product, all day, one user at a time:</p>
+<ul>
+  <li>A user signs up.</li>
+  <li>A user abandons onboarding.</li>
+  <li>A user funds a wallet.</li>
+  <li>A user books a therapy session.</li>
+  <li>A user goes inactive.</li>
+  <li>A user reaches an important milestone.</li>
+</ul>
+<p>Each of those moments needs a different message, at the right time, on the right channel.</p>
+
+<h2>What I actually wanted</h2>
+<p>For years, I wanted one tool that could help me do this properly. I wanted to trigger <a href="lifecycle-email-sequences.html">email sequences</a> based on user actions, send <a href="push-notifications-laravel.html">push notifications</a> based on events, and <a href="sms-notifications-laravel.html">SMS</a> for the moments where email would not be enough.</p>
+<p>And because I&rsquo;m a software engineer, I wanted something I could plug directly into my own backend without fighting the tool every step of the way.</p>
+
+<h2>Then I found Customer.io</h2>
+<p>It was one of the first tools that made me feel like someone truly understood the problem. It had email, SMS, push notifications, SDKs, event tracking, user profiles, and the kind of flexibility serious products need.</p>
+<p>It was good.</p>
+<p><strong>But it was freaking expensive.</strong></p>
+<p>Customer.io has a generous startup program, and Mytherapist.ng benefited from it for a year. That access helped us do a lot. But once the credits expired, the cost became hard to justify.</p>
+<p>That experience stayed with me. I kept thinking about the kind of tool I wished existed:</p>
+<div class="callout">Something powerful, but not priced out of reach. Something developer-friendly that you could self-host if you wanted. A tool that did not force growing startups to choose between better user engagement and staying lean.</div>
+
+<h2>So I built Trigger Engage</h2>
+<p>In September last year, I started building <a href="https://github.com/Trigger-engage/trigger-engage">Trigger Engage</a>.</p>
+<p>Trigger Engage is an open-source customer engagement platform for product teams, founders, and developers who want to send smarter messages based on real user actions. You can use it to trigger any &mdash; or a combination &mdash; of:</p>
+<ul>
+  <li>Email sequences</li>
+  <li>Push notifications</li>
+  <li>SMS messages</li>
+  <li>User onboarding flows</li>
+  <li>Reactivation campaigns</li>
+  <li>Product lifecycle messages</li>
+  <li>Event-based communication across your app</li>
+</ul>
+<p>The goal is simple: help you keep in touch with your users based on what they do, not just when you remember to send a newsletter.</p>
+<p>This is the tool I needed while building Mytherapist.ng, OpinionPadi, and the products we&rsquo;ve worked on at MixedFraction. Now, I&rsquo;m making it available to other builders too.</p>
+<p><strong>Trigger Engage is here.</strong></p>
+<p class="signoff">&mdash; Afolayan, Founder of Trigger Engage</p>
+</article>
+    <aside class="cta-box">
+      <h3>Start sending smarter messages</h3>
+      <p>Trigger Engage is free, open source, and self-hostable — send email, SMS &amp; push based on what your users do, with no per-user bill.</p>
+      <div class="btns">
+        <a class="btn btn-primary" href="https://github.com/Trigger-engage/server/blob/main/docs/INSTALLATION.md">Get started</a>
+        <a class="btn btn-ghost" href="https://github.com/Trigger-engage/trigger-engage">View on GitHub</a>
+      </div>
+    </aside>
+    <section class="related">
+      <h2>Keep reading</h2>
+      <div class="related-grid">
+        <a href="customer-io-alternatives.html"><span class="cat">Comparison</span><strong>Customer.io Alternatives: 6 Options for 2026</strong></a>
+        <a href="migrate-from-customer-io.html"><span class="cat">Guide</span><strong>How to Migrate from Customer.io (Step-by-Step)</strong></a>
+        <a href="marketing-automation-explained.html"><span class="cat">Guide</span><strong>Marketing Automation Explained: How It Actually Works</strong></a>
+      </div>
+    </section>
+  </div>
+</main>
+<footer class="site"><div class="wrap foot">
+  <a class="brand" href="../index.html"><span class="mark">TE</span><span>Trigger Engage</span></a>
+  <div class="links">
+    <a href="../index.html">Home</a><a href="index.html">Blog</a>
+    <a href="https://github.com/Trigger-engage/server/tree/main/docs">Docs</a>
+    <a href="https://github.com/Trigger-engage/trigger-engage">GitHub</a>
+  </div>
+  <span class="copy">© 2026 Trigger Engage · MIT licensed</span>
+</div></footer>
+</body>
+</html>
