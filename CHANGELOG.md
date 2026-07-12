@@ -14,19 +14,19 @@ Four capabilities closing the biggest gaps against hosted lifecycle-messaging pl
   attributes and event behaviour (e.g. *booked but not attended in 30 days*, *inactive
   14 days*, *premium plan*) that recomputes itself — incrementally per person on events and
   profile edits, and on a periodic scheduler sweep for time-based drift. A rule builder on
-  the Segments page, editable after creation. See [Segments](server/docs/guides/segments.md).
+  the Segments page, editable after creation. See [Segments](https://github.com/Trigger-engage/server/blob/main/docs/guides/segments.md).
 - **A/B testing.** A `split` journey node that routes each person to one of 2–4 weighted
   message variants (deterministic per person, so retries never reshuffle), converging back to
   the journey. Live per-variant entered / converted / rate results on the automation editor.
-  See [A/B testing](server/docs/guides/ab-testing.md).
+  See [A/B testing](https://github.com/Trigger-engage/server/blob/main/docs/guides/ab-testing.md).
 - **Anonymous → identified merge.** Track events and profiles against a device/session
   `anonymous_id` before signup; on identify, the anonymous history (events, messages, runs,
   suppressions, segment memberships, attributes) is folded into the known person. The SDK
   `identify()` and `event()` gained an optional `anonymousId` argument (backward compatible).
-  See [Anonymous → identified](server/docs/guides/anonymous-identity.md).
+  See [Anonymous → identified](https://github.com/Trigger-engage/server/blob/main/docs/guides/anonymous-identity.md).
 - **Analytics dashboard.** A time-series Analytics page: message volume (sent vs delivered),
   delivery funnel, runs/day, events/day, per-channel breakdown, and period-over-period deltas
-  over a 7/14/30/90-day window. See [Analytics](server/docs/guides/analytics.md).
+  over a 7/14/30/90-day window. See [Analytics](https://github.com/Trigger-engage/server/blob/main/docs/guides/analytics.md).
 - Documentation set: monorepo README, docs index, concepts, HTTP API reference, and per-feature
   guides.
 
@@ -39,7 +39,7 @@ Four capabilities closing the biggest gaps against hosted lifecycle-messaging pl
 ## [0.4.0] — Dogfood — planned
 
 Point the Mytherapist.ng backend at Trigger Engage behind `CustomerIoService`, run in shadow
-mode alongside Customer.io, compare, and cut over. See [PRODUCTION.md](server/PRODUCTION.md).
+mode alongside Customer.io, compare, and cut over. See [PRODUCTION.md](https://github.com/Trigger-engage/server/blob/main/PRODUCTION.md).
 
 ## [0.38.0] — Dual-mode distribution
 
@@ -79,5 +79,5 @@ mode alongside Customer.io, compare, and cut over. See [PRODUCTION.md](server/PR
   (SMTP + ZeptoMail), the durable automation engine (trigger → delay → email) with idempotent
   ingestion and no-double-send guarantees, workspaces, and API keys.
 
-[0.5.0]: server/PROGRESS.md
-[0.1.0]: server/PROGRESS.md
+[0.5.0]: https://github.com/Trigger-engage/server/blob/main/PROGRESS.md
+[0.1.0]: https://github.com/Trigger-engage/server/blob/main/PROGRESS.md

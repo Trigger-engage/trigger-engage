@@ -23,3 +23,7 @@ vendor/
 
 # Local git-history backup of former sub-repos (kept outside the tree, but ignore just in case)
 .te-git-history-backup/
+
+# Code now lives in separate repos (Trigger-engage/server, Trigger-engage/laravel-sdk)
+/server/
+/laravel-sdk/

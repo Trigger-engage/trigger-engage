@@ -7,8 +7,8 @@ setup, the test suite, and the conventions we follow. Issues and pull requests a
 
 | Path | What it is |
 |---|---|
-| [`server/`](server) | The platform — Laravel 13, ingestion API, automation engine, React/Inertia dashboard |
-| [`laravel-sdk/`](laravel-sdk) | The `trigger-engage/laravel` client SDK |
+| [`server/`](https://github.com/Trigger-engage/server) | The platform — Laravel 13, ingestion API, automation engine, React/Inertia dashboard |
+| [`laravel-sdk/`](https://github.com/Trigger-engage/laravel-sdk) | The `trigger-engage/laravel` client SDK |
 
 The server bundles the SDK through a local Composer path repository, so you can develop both
 together without publishing.
@@ -78,7 +78,7 @@ the `BuildsWorkspaces` helper trait; follow the existing patterns (see
 
 ## Engine invariants to preserve
 
-The engine makes hard guarantees ([details](server/README.md#engine-guarantees)). If you touch
+The engine makes hard guarantees ([details](https://github.com/Trigger-engage/server/blob/main/README.md#engine-guarantees)). If you touch
 the run engine, ingestion, or the scheduler tick, preserve them and add tests that prove it:
 
 - No double-sends — a unique per-(run, node) reservation is taken before provider dispatch.
@@ -91,7 +91,7 @@ the run engine, ingestion, or the scheduler tick, preserve them and add tests th
 1. Branch off the default branch.
 2. Keep the change focused; note any migration or SDK-contract change in the description.
 3. Run `composer test` (server and SDK) and `vendor/bin/pint` before pushing.
-4. Update the docs under [`server/docs/`](server/docs) and [`CHANGELOG.md`](CHANGELOG.md) when
+4. Update the docs under [`server/docs/`](https://github.com/Trigger-engage/server/tree/main/docs) and [`CHANGELOG.md`](CHANGELOG.md) when
    behaviour changes.
 5. When a change spans the server and SDK, land the server first — clients depend on the API.
 
