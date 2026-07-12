@@ -155,7 +155,7 @@ TriggerEngage::<span class="c-fn">event</span>(<span class="c-str">'customer_sig
 <p>Your Laravel app's only job is to keep firing accurate events (<code>customer_sign_up</code>, <code>first_booking_completed</code>). Everything about timing and conditions lives in the journey, where a non-engineer can adjust the delay or reword the nudge without a deploy. For deeper patterns — onboarding, trial conversion, win-back — see our guide to <a href="lifecycle-email-sequences.html">lifecycle email sequences</a>.</p>
 
 <h2>Adding SMS and push</h2>
-<p>Because the engine already knows who the person is, adding channels is not more integration work — it's another send node on the same journey. The same <code>customer_sign_up</code> event that triggers the welcome email can, three days later, trigger an SMS nudge instead of (or alongside) the email, all against one profile. Email goes out over SMTP, SES, Mailgun, or Postmark; SMS via Termii; push via OneSignal. One identify, one event, any channel.</p>
+<p>Because the engine already knows who the person is, adding channels is not more integration work — it's another send node on the same journey. The same <code>customer_sign_up</code> event that triggers the welcome email can, three days later, trigger an <a href="sms-notifications-laravel.html">SMS nudge</a> instead of (or alongside) the email, all against one profile. Email goes out over SMTP, SES, Mailgun, or Postmark; SMS via Termii; <a href="push-notifications-laravel.html">push</a> via OneSignal. One identify, one event, any channel.</p>
 
 <h2>Testing without sending real email</h2>
 <p>You never want a test suite firing live email. For the DIY route, Laravel's <code>Mail::fake()</code> lets you assert a mailable was queued without sending it:</p>
@@ -194,8 +194,9 @@ TriggerEngage::<span class="c-fn">assertEventSent</span>(<span class="c-str">'cu
     <section class="related">
       <h2>Keep reading</h2>
       <div class="related-grid">
+        <a href="sms-notifications-laravel.html"><span class="cat">Tutorial</span><strong>How to Send SMS Notifications in Laravel</strong></a>
+        <a href="push-notifications-laravel.html"><span class="cat">Tutorial</span><strong>How to Send Push Notifications in Laravel</strong></a>
         <a href="lifecycle-email-sequences.html"><span class="cat">Guide</span><strong>Lifecycle Email Sequences: Onboarding to Win-Back</strong></a>
-        <a href="ab-testing-emails-guide.html"><span class="cat">Guide</span><strong>A/B Testing Emails: A Practical Guide</strong></a>
       </div>
     </section>
   </div>

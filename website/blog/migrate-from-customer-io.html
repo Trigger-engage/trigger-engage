@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Canonical / OG base URL: https://triggerengage.com -->
+<title>How to Migrate from Customer.io | Trigger Engage</title>
+<meta name="description" content="A step-by-step plan to migrate from Customer.io — export data, rebuild journeys and segments, run in shadow mode, and cut over without losing messages.">
+<link rel="canonical" href="https://triggerengage.com/blog/migrate-from-customer-io.html">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How to Migrate from Customer.io">
+<meta property="og:description" content="A step-by-step plan to migrate from Customer.io — export data, rebuild journeys and segments, run in shadow mode, and cut over without losing messages.">
+<meta property="og:url" content="https://triggerengage.com/blog/migrate-from-customer-io.html">
+<meta property="article:published_time" content="2026-06-24">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How to Migrate from Customer.io">
+<meta name="twitter:description" content="A step-by-step plan to migrate from Customer.io — export data, rebuild journeys and segments, run in shadow mode, and cut over without losing messages.">
+<link rel="stylesheet" href="blog.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"How to Migrate from Customer.io (Step-by-Step)","description":"A step-by-step plan to migrate from Customer.io — export data, rebuild journeys and segments, run in shadow mode, and cut over without losing messages.","datePublished":"2026-06-24","dateModified":"2026-06-24","author":{"@type":"Organization","name":"Trigger Engage","url":"https://triggerengage.com"},"publisher":{"@type":"Organization","name":"Trigger Engage"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://triggerengage.com/blog/migrate-from-customer-io.html"},"keywords":"migrate from customer.io, customer.io migration, customer.io export, switch from customer.io"}
+</script>
+<meta property="og:site_name" content="Trigger Engage">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://triggerengage.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Trigger Engage — automated email, SMS &amp; push, no per-user bill">
+<meta name="twitter:image" content="https://triggerengage.com/assets/og-image.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#070b14">
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/instrument-sans-600.woff2" crossorigin>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://triggerengage.com/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://triggerengage.com/blog/"}, {"@type": "ListItem", "position": 3, "name": "How to Migrate from Customer.io (Step-by-Step)", "item": "https://triggerengage.com/blog/migrate-from-customer-io.html"}]}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Can I export my data from Customer.io?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Customer.io offers account-level data exports plus an API you can page through to pull people, their attributes, and their event history. Export everything to your own storage as CSV or JSON before you start rebuilding — that archive is portable to any destination and is your fallback if anything goes wrong mid-migration."}}, {"@type": "Question", "name": "Will I lose message history when I migrate?", "acceptedAnswer": {"@type": "Answer", "text": "Not if you export it first. Historical sends live in the old system, so archive that reporting data before you close the account. Ongoing behavioral history stays intact when you keep the same person IDs and event names, and a tool with anonymous→identified merge preserves pre-signup activity that a naive import would drop."}}, {"@type": "Question", "name": "How long does a Customer.io migration take?", "acceptedAnswer": {"@type": "Answer", "text": "A small account is a few days; a large one with many journeys is typically two to four weeks including a shadow-mode period. The build itself is fast — the time goes into auditing, running both systems in parallel, and comparing counts and renders before you flip outbound sending on."}}, {"@type": "Question", "name": "Is there a free alternative to Customer.io?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Trigger Engage is open source under the MIT licence, self-hostable, and has no per-profile fee, so a large or partly-dormant list doesn't inflate your bill. Its identify/event SDK mirrors the identify/track pattern, which is what makes porting your existing call sites a small change rather than a rewrite."}}]}
+</script>
+</head>
+<body>
+<header class="nav"><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><span class="mark">TE</span><span>Trigger&nbsp;Engage</span></a>
+  <nav class="nav-links" aria-label="Primary">
+    <a href="../index.html#features">Features</a>
+    <a href="../index.html#pricing">Pricing</a>
+    <a href="https://github.com/Trigger-engage/server/tree/main/docs">Docs</a>
+    <a href="index.html" aria-current="page">Blog</a>
+  </nav>
+  <div class="nav-cta"><a class="btn btn-primary" href="https://github.com/Trigger-engage/server/blob/main/docs/INSTALLATION.md">Get started</a></div>
+</div></header>
+<main>
+  <div class="article">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="../index.html">Home</a> &rsaquo; <a href="index.html">Blog</a> &rsaquo; Guide</nav>
+    <header class="article-head">
+      <div class="kicker">Guide</div>
+      <h1>How to Migrate from Customer.io (Step-by-Step)</h1>
+      <div class="meta"><span>June 24, 2026</span><span class="dot"></span><span>9 min read</span><span class="dot"></span><span>The Trigger Engage team</span></div>
+    </header>
+    <article class="prose">
+<p class="lead">Whether it's the per-profile bill creeping up every quarter or a growing wish to own your own customer data, plenty of teams decide to <strong>migrate from Customer.io</strong>. The good news: a clean migration is very doable if you plan it. The bad news is that the sloppy version double-sends messages to real people and loses years of engagement history. This guide walks the whole move step by step so you avoid both.</p>
+
+<h2>Why teams migrate</h2>
+<p>Customer.io is a capable, well-built platform, and for many teams it's the right call to stay. But three reasons come up again and again when people decide to leave. The first is <strong>cost at scale</strong>: pricing is tied to the number of profiles you store, so as your list grows — including dormant and duplicate records — the bill climbs whether or not those people ever open an email. The second is <strong>data ownership</strong>: your profiles, events, and message history live in someone else's system, and getting a full, portable copy takes deliberate effort. The third is <strong>self-hosting</strong>: some teams, especially in regulated or privacy-sensitive markets, want the whole engine running on infrastructure they control.</p>
+<p>If you're still deciding where to go rather than how to get there, start with our roundup of <a href="customer-io-alternatives.html">Customer.io alternatives</a> and come back once you've shortlisted a destination. One option worth a look is <a href="https://github.com/Trigger-engage/trigger-engage">Trigger Engage</a>, an open-source (MIT) engine you can self-host or embed directly in a Laravel app — there's no per-profile fee, so a large, partly-dormant list costs you nothing extra.</p>
+
+<h2>Before you start: audit what you have</h2>
+<p>Migration is mostly a data and inventory problem, not a coding problem. Before touching anything, write down what actually exists in your current account. Inventory your campaigns and journeys, your segments, your email and message templates, every tracked event name, and every integration that reads from or writes to Customer.io (your app, your CDP, your webhooks, your analytics). Then mark what's genuinely in use. Most accounts carry a long tail of abandoned drafts, one-off broadcasts, and segments nobody references. You do not need to port those. Migrating only what's live is the single biggest thing that keeps the project from ballooning.</p>
+
+<div class="callout"><strong>Tip:</strong> Rank your journeys by how many people actually flow through them each week. Rebuild the top handful first, verify them in shadow mode, and treat the long tail as optional — much of it can be quietly retired rather than migrated.</div>
+
+<h2>The migration, step by step</h2>
+<p>With the audit done, the move itself breaks into five stages. Do them in order — the early stages make the later ones safe.</p>
+<ol>
+  <li><strong>Export your data.</strong> Pull your people and their attributes, your segment definitions, your templates, and your event history out of Customer.io. At a high level, Customer.io provides account data exports plus an API you can page through for people and their events; the exact screens change over time, so follow their current export documentation rather than any fixed click-path. Save everything as flat files (CSV or JSON) in your own storage first — that archive is your safety net regardless of which tool you land on.</li>
+  <li><strong>Map events and identifiers.</strong> This is the step that makes or breaks a clean cutover. Keep the <em>same</em> person identifiers (the ID you already use to `identify` a user) and the <em>same</em> event names on the new side. If a signup fires <code>account_created</code> today, it should fire <code>account_created</code> tomorrow. Because both platforms follow the identify/track pattern, your call sites port with only the client swapped. A tiny before/after makes it concrete:
+    <pre><code><span class="c">// Before — Customer.io</span>
+Customerio::identify($user-&gt;id, [
+    'email' =&gt; $user-&gt;email,
+    'plan'  =&gt; $user-&gt;plan,
+]);
+Customerio::track($user-&gt;id, 'account_created', [
+    'source' =&gt; 'web',
+]);
+
+<span class="c">// After — Trigger Engage (same IDs, same event names)</span>
+TriggerEngage::identify($user-&gt;id, [
+    'email' =&gt; $user-&gt;email,
+    'plan'  =&gt; $user-&gt;plan,
+]);
+TriggerEngage::event($user-&gt;id, 'account_created', [
+    'source' =&gt; 'web',
+]);</code></pre>
+    Keeping names and IDs stable means your journeys and segments port cleanly instead of needing a rewrite. For the Laravel specifics of wiring these calls, see <a href="event-based-emails-laravel.html">firing events from Laravel</a>.</li>
+  <li><strong>Rebuild segments and journeys.</strong> Recreate your audiences in the new tool's segment builder and your automations in its journey builder. Because you kept the same attributes and event names, the rules translate almost one to one — "users on the free plan who haven't logged in for 14 days" is the same definition on either side. Our guides to <a href="behavioral-segmentation.html">behavioral segmentation</a> and <a href="lifecycle-email-sequences.html">lifecycle email sequences</a> cover how to structure these so they're maintainable rather than a tangle of one-off rules.</li>
+  <li><strong>Run in shadow mode.</strong> Before you send a single real message from the new system, run both in parallel. Send your events to Customer.io <em>and</em> the new tool, but keep Customer.io authoritative and <strong>disable outbound sending on the new side</strong>. Now you can compare: are the same people entering the same journeys? Do the templates render identically? Do the segment counts match? Trigger Engage supports exactly this shadow-mode cutover, so you can validate everything end to end without any user receiving a duplicate.</li>
+  <li><strong>Cut over.</strong> Once the counts and renders line up, flip the SDK so the new system becomes authoritative and enable its outbound sending. Import your existing <strong>suppression and opt-out list</strong> first — this is non-negotiable — and keep the old account's suppression list on hand as a reference. Watch deliverability closely on the first few real sends: a new sending domain or IP warms up gradually, so start with lower-volume, high-engagement journeys before turning on big broadcasts.</li>
+</ol>
+
+<h2>Common pitfalls</h2>
+<p>Most migrations that go wrong go wrong in a small number of predictable ways. Double-sends happen when both systems send at once — the shadow-mode discipline above prevents it. Broken suppression is the scariest: if opt-outs don't carry over, you can email people who asked never to hear from you. Lost pre-signup history bites teams that tracked anonymous visitors, since a naive import only brings identified profiles. And hard-coded template IDs quietly break journeys when the new system assigns its own IDs.</p>
+<table>
+  <thead><tr><th>Risk</th><th>How to avoid it</th></tr></thead>
+  <tbody>
+    <tr><td>Double-sends to real users</td><td>Keep the old system authoritative and disable outbound on the new side until cutover.</td></tr>
+    <tr><td>Broken suppression / opt-outs</td><td>Export and import the suppression list before the first send; verify a known opted-out address is suppressed.</td></tr>
+    <tr><td>Lost pre-signup history</td><td>Choose a tool with anonymous&#8594;identified merge so early events attach to the profile once the person signs up.</td></tr>
+    <tr><td>Hard-coded template IDs</td><td>Reference templates by name or key, not by numeric ID, and re-point them after rebuild.</td></tr>
+  </tbody>
+</table>
+
+<h2>How long it takes</h2>
+<p>Timelines vary with account complexity, not company size. A small setup — a handful of journeys, a few segments, one app firing events — is realistically a few days of work end to end. A large account with dozens of interlocking journeys, many integrations, and a big historical dataset is more like two to four weeks, and most of that is the shadow-mode period where you're watching and comparing rather than building. Budget for the observation window; rushing the cutover is where the expensive mistakes live.</p>
+
+<p>Frame the destination correctly and the whole project gets simpler: you're not just swapping one vendor for another, you're moving to a <a href="marketing-automation-explained.html">marketing-automation platform</a> you actually control — one where segments, journeys, and data all live on infrastructure you own. Trigger Engage runs standalone or embeds in Laravel via <code>composer require trigger-engage/server</code>; the <a href="https://github.com/Trigger-engage/server/tree/main/docs">docs</a> cover installation, the SDK, and the shadow-mode workflow in detail.</p>
+
+<h2>Frequently asked questions</h2>
+<div class="faq">
+  <details><summary>Can I export my data from Customer.io?</summary><div class="a">Yes. Customer.io offers account-level data exports plus an API you can page through to pull people, their attributes, and their event history. Export everything to your own storage as CSV or JSON before you start rebuilding — that archive is portable to any destination and is your fallback if anything goes wrong mid-migration.</div></details>
+  <details><summary>Will I lose message history when I migrate?</summary><div class="a">Not if you export it first. Historical <em>sends</em> live in the old system, so archive that reporting data before you close the account. Ongoing behavioral history stays intact when you keep the same person IDs and event names, and a tool with anonymous&#8594;identified merge preserves pre-signup activity that a naive import would drop.</div></details>
+  <details><summary>How long does a Customer.io migration take?</summary><div class="a">A small account is a few days; a large one with many journeys is typically two to four weeks including a shadow-mode period. The build itself is fast — the time goes into auditing, running both systems in parallel, and comparing counts and renders before you flip outbound sending on.</div></details>
+  <details><summary>Is there a free alternative to Customer.io?</summary><div class="a">Yes. Trigger Engage is open source under the MIT licence, self-hostable, and has no per-profile fee, so a large or partly-dormant list doesn't inflate your bill. Its identify/event SDK mirrors the identify/track pattern, which is what makes porting your existing call sites a small change rather than a rewrite.</div></details>
+</div>
+</article>
+    <aside class="cta-box">
+      <h3>Own your lifecycle messaging</h3>
+      <p>Trigger Engage is free, open source, and self-hostable — send email, SMS &amp; push based on what your users do, with no per-user bill.</p>
+      <div class="btns">
+        <a class="btn btn-primary" href="https://github.com/Trigger-engage/server/blob/main/docs/INSTALLATION.md">Get started</a>
+        <a class="btn btn-ghost" href="https://github.com/Trigger-engage/trigger-engage">View on GitHub</a>
+      </div>
+    </aside>
+    <section class="related">
+      <h2>Keep reading</h2>
+      <div class="related-grid">
+        <a href="customer-io-alternatives.html"><span class="cat">Comparison</span><strong>Customer.io Alternatives: 6 Options for 2026</strong></a>
+        <a href="marketing-automation-explained.html"><span class="cat">Guide</span><strong>Marketing Automation Explained</strong></a>
+        <a href="event-based-emails-laravel.html"><span class="cat">Tutorial</span><strong>How to Send Event-Based Emails in Laravel</strong></a>
+      </div>
+    </section>
+  </div>
+</main>
+<footer class="site"><div class="wrap foot">
+  <a class="brand" href="../index.html"><span class="mark">TE</span><span>Trigger Engage</span></a>
+  <div class="links">
+    <a href="../index.html">Home</a><a href="index.html">Blog</a>
+    <a href="https://github.com/Trigger-engage/server/tree/main/docs">Docs</a>
+    <a href="https://github.com/Trigger-engage/trigger-engage">GitHub</a>
+  </div>
+  <span class="copy">© 2026 Trigger Engage · MIT licensed</span>
+</div></footer>
+</body>
+</html>

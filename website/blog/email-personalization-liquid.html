@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Canonical / OG base URL: https://triggerengage.com -->
+<title>Personalizing Emails with Liquid Templates | Trigger Engage</title>
+<meta name="description" content="Learn how to personalize emails with Liquid templating — variables, conditionals, and loops that turn one template into thousands of tailored messages.">
+<link rel="canonical" href="https://triggerengage.com/blog/email-personalization-liquid.html">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Personalizing Emails with Liquid Templates">
+<meta property="og:description" content="Learn how to personalize emails with Liquid templating — variables, conditionals, and loops that turn one template into thousands of tailored messages.">
+<meta property="og:url" content="https://triggerengage.com/blog/email-personalization-liquid.html">
+<meta property="article:published_time" content="2026-07-04">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Personalizing Emails with Liquid Templates">
+<meta name="twitter:description" content="Learn how to personalize emails with Liquid templating — variables, conditionals, and loops that turn one template into thousands of tailored messages.">
+<link rel="stylesheet" href="blog.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"Personalizing Emails with Liquid Templates","description":"Learn how to personalize emails with Liquid templating — variables, conditionals, and loops that turn one template into thousands of tailored messages.","datePublished":"2026-07-04","dateModified":"2026-07-04","author":{"@type":"Organization","name":"Trigger Engage","url":"https://triggerengage.com"},"publisher":{"@type":"Organization","name":"Trigger Engage"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://triggerengage.com/blog/email-personalization-liquid.html"},"keywords":"email personalization, liquid templates, liquid email, dynamic email content"}
+</script>
+<meta property="og:site_name" content="Trigger Engage">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://triggerengage.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Trigger Engage — automated email, SMS &amp; push, no per-user bill">
+<meta name="twitter:image" content="https://triggerengage.com/assets/og-image.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#070b14">
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/instrument-sans-600.woff2" crossorigin>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://triggerengage.com/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://triggerengage.com/blog/"}, {"@type": "ListItem", "position": 3, "name": "Personalizing Emails with Liquid Templates", "item": "https://triggerengage.com/blog/email-personalization-liquid.html"}]}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is Liquid templating?", "acceptedAnswer": {"@type": "Answer", "text": "Liquid is a safe, open-source templating language created by Shopify. It uses double curly braces to output values and curly-brace-percent tags to run simple logic like conditionals and loops. Email and messaging tools use it to render one template into many personalized messages without exposing the underlying system to unsafe code."}}, {"@type": "Question", "name": "How do I add a fallback for a missing name in Liquid?", "acceptedAnswer": {"@type": "Answer", "text": "Pipe the variable through the default filter: {{ person.first_name | default: \"there\" }}. If the field is undefined or empty, Liquid outputs \"there\" instead of a blank, so a reader never sees \"Hi ,\". Add a fallback to every user-supplied field you print."}}, {"@type": "Question", "name": "How do I loop over items in an email?", "acceptedAnswer": {"@type": "Answer", "text": "Use the for tag: {% for item in order.items %}{{ item.name }}{% endfor %}. Each item in the list renders the block once. Helpers like limit, forloop.first, and forloop.last let you cap the count or handle separators without extra data."}}, {"@type": "Question", "name": "Does personalization actually improve results?", "acceptedAnswer": {"@type": "Answer", "text": "Behavioral personalization — referencing what someone did, their lifecycle stage, or their segment — consistently outperforms generic sends more than a first-name merge alone does. The honest answer is to measure it: A/B test a personalized variant against a generic one for your audience and let the open, click, and conversion numbers decide."}}]}
+</script>
+</head>
+<body>
+<header class="nav"><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><span class="mark">TE</span><span>Trigger&nbsp;Engage</span></a>
+  <nav class="nav-links" aria-label="Primary">
+    <a href="../index.html#features">Features</a>
+    <a href="../index.html#pricing">Pricing</a>
+    <a href="https://github.com/Trigger-engage/server/tree/main/docs">Docs</a>
+    <a href="index.html" aria-current="page">Blog</a>
+  </nav>
+  <div class="nav-cta"><a class="btn btn-primary" href="https://github.com/Trigger-engage/server/blob/main/docs/INSTALLATION.md">Get started</a></div>
+</div></header>
+<main>
+  <div class="article">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="../index.html">Home</a> &rsaquo; <a href="index.html">Blog</a> &rsaquo; Tutorial</nav>
+    <header class="article-head">
+      <div class="kicker">Tutorial</div>
+      <h1>Personalizing Emails with Liquid Templates</h1>
+      <div class="meta"><span>July 4, 2026</span><span class="dot"></span><span>8 min read</span><span class="dot"></span><span>The Trigger Engage team</span></div>
+    </header>
+    <article class="prose">
+<p><strong>"Hi {{ first_name }}"</strong> is where personalization starts, not where it ends. Personalizing emails with Liquid means turning a single template into thousands of tailored messages, each one assembled at send time from the data you already hold about a person. Once you stop thinking of a template as fixed copy and start thinking of it as a small program, the name at the top becomes the least interesting thing you can do.</p>
+
+<h2>What is Liquid?</h2>
+<p>Liquid is a safe templating language created by Shopify and now used across a wide range of email and messaging tools. "Safe" is the operative word: a template author can output data and run simple logic, but cannot reach into your server, run arbitrary code, or crash the process. That makes it ideal for rendering messages from untrusted or user-supplied data.</p>
+<p>Liquid has two building blocks. Output uses double curly braces to print a value, and tags use curly-brace-percent to run logic:</p>
+<pre><code><span class="c-cm">{# output prints a value #}</span>
+Hello, {{ person.first_name }}!
+
+<span class="c-cm">{# tags run logic, and print nothing themselves #}</span>
+{% if person.plan == <span class="c-str">"pro"</span> %}Thanks for going Pro.{% endif %}</code></pre>
+<p>That is the whole model: <em>output</em> what you know, and use <em>tags</em> to decide what to output.</p>
+
+<h2>Variables and safe fallbacks</h2>
+<p>Variables come from your data — most commonly a person's profile. The risk is that a field is empty, and an email that greets someone with "Hi ," instantly reads as automated. The <span class="c-fn">default</span> filter guards against this:</p>
+<pre><code>Hi {{ person.first_name | <span class="c-fn">default:</span> <span class="c-str">"there"</span> }},
+
+<span class="c-cm">{# empty city falls back gracefully #}</span>
+Weather near {{ person.city | <span class="c-fn">default:</span> <span class="c-str">"you"</span> }} looks good.</code></pre>
+<p>Make a fallback a habit for every user-supplied field. A blank name should never reach the reader.</p>
+
+<div class="callout"><strong>Tip:</strong> In Liquid, an undefined variable and an empty string both trigger <span class="c-fn">default</span>, but a literal <span class="c-str">"0"</span> or <span class="c-key">false</span> does not. When a real zero is a valid value — an order count, a balance — check it explicitly with an <span class="c-key">if</span> rather than leaning on <span class="c-fn">default</span>.</div>
+
+<h2>Conditionals</h2>
+<p>Conditionals let one template serve audiences that need different copy. Use <span class="c-key">if</span>, <span class="c-key">elsif</span>, and <span class="c-key">else</span> to branch on plan, country, or past behavior:</p>
+<pre><code>{% if person.plan == <span class="c-str">"free"</span> %}
+  You're on the Free plan &mdash; upgrade to unlock reports.
+{% elsif person.plan == <span class="c-str">"pro"</span> %}
+  You're on Pro. Here's what's new this month.
+{% else %}
+  Welcome! Pick a plan that fits.
+{% endif %}</code></pre>
+<p>You can branch on anything in the data — <span class="c-fn">contains</span> for tags, comparisons for numbers, or a flag set by an event:</p>
+<pre><code>{% if person.country == <span class="c-str">"NG"</span> and person.orders &gt; <span class="c-str">3</span> %}
+  As a returning customer in Nigeria, here's free delivery.
+{% endif %}</code></pre>
+
+<h2>Loops</h2>
+<p>Loops render a block once per item in a list — perfect for order line items, recommended products, or a digest of recent activity. The <span class="c-key">for</span> tag walks a collection:</p>
+<pre><code>&lt;ul&gt;
+{% for item in order.items %}
+  &lt;li&gt;{{ item.name }} &mdash; {{ item.qty }} &times; {{ item.price }}&lt;/li&gt;
+{% endfor %}
+&lt;/ul&gt;</code></pre>
+<p>Liquid also gives you loop helpers. <span class="c-fn">forloop.first</span>, <span class="c-fn">forloop.last</span>, and <span class="c-fn">limit</span> let you shape the output without extra data:</p>
+<pre><code>{% for product in recommendations limit: <span class="c-str">3</span> %}
+  {{ product.name }}{% unless forloop.last %}, {% endunless %}
+{% endfor %}</code></pre>
+
+<h2>Filters</h2>
+<p>Filters transform a value on its way to output. They chain left to right with the pipe character, and they are how you format text, dates, and numbers so the email looks hand-written rather than machine-dumped:</p>
+<pre><code>{{ person.first_name | <span class="c-fn">capitalize</span> }}          <span class="c-cm">{# ada -&gt; Ada #}</span>
+{{ coupon_code | <span class="c-fn">upcase</span> }}                <span class="c-cm">{# save10 -&gt; SAVE10 #}</span>
+{{ order.created_at | <span class="c-fn">date:</span> <span class="c-str">"%B %-d, %Y"</span> }}  <span class="c-cm">{# July 4, 2026 #}</span>
+{{ order.total | <span class="c-fn">divided_by:</span> <span class="c-str">100.0</span> }}      <span class="c-cm">{# kobo -&gt; naira #}</span></code></pre>
+<p>Because monetary values are often stored in the smallest currency unit, a formatting filter is frequently where you convert for display. Keep the raw value in your data and format only at the template edge.</p>
+
+<h2>Personalization beyond the first name</h2>
+<p>The real wins come from behavior and context, not the greeting. Reference what the person actually did — the report they generated, the item left in the cart, the feature they have not tried — and the message stops feeling like a broadcast. Tie copy to the person's <a href="lifecycle-email-sequences.html">lifecycle stage</a> or segment and each email arrives with a reason to exist:</p>
+<pre><code>{% if person.lifecycle == <span class="c-str">"trial"</span> and person.reports_created == <span class="c-str">0</span> %}
+  You haven't built your first report yet &mdash; here's a 2-minute start.
+{% endif %}</code></pre>
+<p>This is exactly what makes <a href="drip-campaigns.html">drip campaigns</a> and <a href="onboarding-email-examples.html">onboarding emails</a> feel one-to-one: the same template renders differently for a stalled trial user than for a power user, so nobody gets a message that ignores where they are.</p>
+
+<h2>Feeding Liquid with data</h2>
+<p>A template can only render what it receives. Variables come from two places: the person profile (attributes, tags, segments) and the event that triggered the message. That second source is powerful — the same <a href="event-based-emails-laravel.html">event you fire from your app</a> can carry the exact data your template needs. Fire a <code>order.placed</code> event with the items and total attached, and your receipt email renders those line items directly:</p>
+<pre><code><span class="c-cm">{# data from the triggering event #}</span>
+Order {{ event.order_id }} confirmed &mdash; {{ event.total | <span class="c-fn">divided_by:</span> <span class="c-str">100.0</span> }}.
+{% for item in event.items %}
+  &bull; {{ item.name }}
+{% endfor %}</code></pre>
+<p>Trigger Engage takes this approach: it uses Liquid for its email, SMS, and push templates, drawing personalization from person attributes, event data, and segments — and because it is <a href="https://github.com/Trigger-engage/trigger-engage">open source and self-hostable</a>, the data model behind those variables is fully in your control.</p>
+
+<h2>Test it before you send</h2>
+<p>Liquid fails quietly — a wrong field name usually renders as nothing, not an error. So preview every template with realistic sample data before it goes out. Decide deliberately how missing variables should render: an empty string, or a sensible <span class="c-fn">default</span>. Then, when the copy matters, <a href="ab-testing-emails-guide.html">A/B test</a> the personalized version against a generic one — personalization is a hypothesis, and the numbers will tell you which fields actually move opens, clicks, and conversions.</p>
+
+<h2>Frequently asked questions</h2>
+<div class="faq">
+  <details><summary>What is Liquid templating?</summary><div class="a">Liquid is a safe, open-source templating language created by Shopify. It uses double curly braces to output values and curly-brace-percent tags to run simple logic like conditionals and loops. Email and messaging tools use it to render one template into many personalized messages without exposing the underlying system to unsafe code.</div></details>
+  <details><summary>How do I add a fallback for a missing name in Liquid?</summary><div class="a">Pipe the variable through the <span class="c-fn">default</span> filter: <code>{{ person.first_name | default: "there" }}</code>. If the field is undefined or empty, Liquid outputs "there" instead of a blank, so a reader never sees "Hi ,". Add a fallback to every user-supplied field you print.</div></details>
+  <details><summary>How do I loop over items in an email?</summary><div class="a">Use the <span class="c-key">for</span> tag: <code>{% for item in order.items %}{{ item.name }}{% endfor %}</code>. Each item in the list renders the block once. Helpers like <span class="c-fn">limit</span>, <span class="c-fn">forloop.first</span>, and <span class="c-fn">forloop.last</span> let you cap the count or handle separators without extra data.</div></details>
+  <details><summary>Does personalization actually improve results?</summary><div class="a">Behavioral personalization — referencing what someone did, their lifecycle stage, or their segment — consistently outperforms generic sends more than a first-name merge alone does. The honest answer is to measure it: A/B test a personalized variant against a generic one for your audience and let the open, click, and conversion numbers decide.</div></details>
+</div>
+</article>
+    <aside class="cta-box">
+      <h3>Own your lifecycle messaging</h3>
+      <p>Trigger Engage is free, open source, and self-hostable — send email, SMS &amp; push based on what your users do, with no per-user bill.</p>
+      <div class="btns">
+        <a class="btn btn-primary" href="https://github.com/Trigger-engage/server/blob/main/docs/INSTALLATION.md">Get started</a>
+        <a class="btn btn-ghost" href="https://github.com/Trigger-engage/trigger-engage">View on GitHub</a>
+      </div>
+    </aside>
+    <section class="related">
+      <h2>Keep reading</h2>
+      <div class="related-grid">
+        <a href="event-based-emails-laravel.html"><span class="cat">Tutorial</span><strong>How to Send Event-Based Emails in Laravel</strong></a>
+        <a href="lifecycle-email-sequences.html"><span class="cat">Guide</span><strong>Lifecycle Email Sequences: Onboarding to Win-Back</strong></a>
+        <a href="drip-campaigns.html"><span class="cat">Guide</span><strong>What Is a Drip Campaign?</strong></a>
+      </div>
+    </section>
+  </div>
+</main>
+<footer class="site"><div class="wrap foot">
+  <a class="brand" href="../index.html"><span class="mark">TE</span><span>Trigger Engage</span></a>
+  <div class="links">
+    <a href="../index.html">Home</a><a href="index.html">Blog</a>
+    <a href="https://github.com/Trigger-engage/server/tree/main/docs">Docs</a>
+    <a href="https://github.com/Trigger-engage/trigger-engage">GitHub</a>
+  </div>
+  <span class="copy">© 2026 Trigger Engage · MIT licensed</span>
+</div></footer>
+</body>
+</html>

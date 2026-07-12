@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Canonical / OG base URL: https://triggerengage.com -->
+<title>Email Deliverability: SPF, DKIM & DMARC | Trigger Engage</title>
+<meta name="description" content="A developer's guide to email deliverability — SPF, DKIM, DMARC, warmup, list hygiene, and the technical setup that keeps your email out of spam.">
+<link rel="canonical" href="https://triggerengage.com/blog/email-deliverability-guide.html">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Email Deliverability: SPF, DKIM & DMARC">
+<meta property="og:description" content="A developer's guide to email deliverability — SPF, DKIM, DMARC, warmup, list hygiene, and the technical setup that keeps your email out of spam.">
+<meta property="og:url" content="https://triggerengage.com/blog/email-deliverability-guide.html">
+<meta property="article:published_time" content="2026-07-01">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Email Deliverability: SPF, DKIM & DMARC">
+<meta name="twitter:description" content="A developer's guide to email deliverability — SPF, DKIM, DMARC, warmup, list hygiene, and the technical setup that keeps your email out of spam.">
+<link rel="stylesheet" href="blog.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"Email Deliverability: A Developer's Guide to SPF, DKIM & DMARC","description":"A developer's guide to email deliverability — SPF, DKIM, DMARC, warmup, list hygiene, and the technical setup that keeps your email out of spam.","datePublished":"2026-07-01","dateModified":"2026-07-01","author":{"@type":"Organization","name":"Trigger Engage","url":"https://triggerengage.com"},"publisher":{"@type":"Organization","name":"Trigger Engage"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://triggerengage.com/blog/email-deliverability-guide.html"},"keywords":"email deliverability, spf dkim dmarc, email authentication, avoid spam folder"}
+</script>
+<meta property="og:site_name" content="Trigger Engage">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://triggerengage.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Trigger Engage — automated email, SMS &amp; push, no per-user bill">
+<meta name="twitter:image" content="https://triggerengage.com/assets/og-image.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#070b14">
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/instrument-sans-600.woff2" crossorigin>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://triggerengage.com/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://triggerengage.com/blog/"}, {"@type": "ListItem", "position": 3, "name": "Email Deliverability: A Developer's Guide to SPF, DKIM & DMARC", "item": "https://triggerengage.com/blog/email-deliverability-guide.html"}]}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Why are my emails going to spam?", "acceptedAnswer": {"@type": "Answer", "text": "Almost always one of three things: missing or broken authentication (SPF, DKIM, DMARC), poor domain or IP reputation from bounces and complaints, or low engagement because the list is stale or the content is unwanted. Start by confirming all three DNS records pass, then audit your list and bounce handling."}}, {"@type": "Question", "name": "What are SPF, DKIM, and DMARC?", "acceptedAnswer": {"@type": "Answer", "text": "They're three DNS records that authenticate your mail. SPF lists which servers may send for your domain. DKIM cryptographically signs each message so receivers can verify it's genuine and unaltered. DMARC ties the two to your visible From: address, tells receivers what to do when authentication fails, and sends you reports. You want all three — they're required for bulk senders at Gmail and Yahoo."}}, {"@type": "Question", "name": "Do I need a dedicated IP address?", "acceptedAnswer": {"@type": "Answer", "text": "Only at scale. Dedicated IPs make sense above roughly 50,000–100,000 messages a month, where there's enough consistent volume to build a stable reputation. Below that, a warmed shared IP pool from your provider almost always delivers better, because a low-volume dedicated IP never accumulates enough signal."}}, {"@type": "Question", "name": "How do I warm up a new sending domain?", "acceptedAnswer": {"@type": "Answer", "text": "Authenticate it first, then ramp volume gradually. Begin with a few hundred messages a day to your most engaged recipients, roughly doubling every few days over two to four weeks. Watch bounce and complaint rates and slow down if either climbs. Consistent daily volume to people who open your mail is what builds reputation fastest."}}]}
+</script>
+</head>
+<body>
+<header class="nav"><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><span class="mark">TE</span><span>Trigger&nbsp;Engage</span></a>
+  <nav class="nav-links" aria-label="Primary">
+    <a href="../index.html#features">Features</a>
+    <a href="../index.html#pricing">Pricing</a>
+    <a href="https://github.com/Trigger-engage/server/tree/main/docs">Docs</a>
+    <a href="index.html" aria-current="page">Blog</a>
+  </nav>
+  <div class="nav-cta"><a class="btn btn-primary" href="https://github.com/Trigger-engage/server/blob/main/docs/INSTALLATION.md">Get started</a></div>
+</div></header>
+<main>
+  <div class="article">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="../index.html">Home</a> &rsaquo; <a href="index.html">Blog</a> &rsaquo; Guide</nav>
+    <header class="article-head">
+      <div class="kicker">Guide</div>
+      <h1>Email Deliverability: A Developer's Guide to SPF, DKIM & DMARC</h1>
+      <div class="meta"><span>July 1, 2026</span><span class="dot"></span><span>11 min read</span><span class="dot"></span><span>The Trigger Engage team</span></div>
+    </header>
+    <article class="prose">
+<p><strong>Email deliverability is the difference between a message that lands in the inbox and one that nobody ever sees.</strong> You can write the perfect onboarding sequence, but if it drops into the spam folder — or gets rejected at the door — none of that work matters. The good news for developers: most spam-folder problems are technical, and technical problems are fixable. This is the practical guide to the DNS records, reputation signals, and list habits that keep your email arriving.</p>
+
+<h2>What "deliverability" actually means</h2>
+<p>People use "deliverability" loosely, but there are really two separate questions. The first is <em>delivery</em>: did the receiving server accept the message at all, or did it bounce it back? The second is <em>placement</em>: once accepted, did it land in the inbox or get filed as spam? A message can be delivered and still be invisible.</p>
+<p>Mailbox providers — Gmail, Outlook, Yahoo, Apple Mail — make the placement decision, and they make it in milliseconds using three broad inputs:</p>
+<ul>
+  <li><strong>Authentication</strong> — can they cryptographically confirm the mail really came from your domain?</li>
+  <li><strong>Reputation</strong> — what's the track record of your sending domain and IP address?</li>
+  <li><strong>Engagement</strong> — do recipients open, click, and reply, or delete and complain?</li>
+</ul>
+<p>You control the first outright, influence the second over time, and earn the third with good content and clean lists. Let's take them in order.</p>
+
+<h2>Authenticate your mail: SPF, DKIM, DMARC</h2>
+<p>Authentication is table stakes. Without it, providers can't tell your mail from a spoofer's, and modern filters treat unauthenticated bulk mail as guilty until proven innocent. Three DNS records do the work, and they build on each other.</p>
+
+<h3>SPF — authorize your sending servers</h3>
+<p>Sender Policy Framework (SPF) is a published list of the servers allowed to send mail for your domain. It lives in a single TXT record at the domain root. The receiver checks the connecting server's IP against that list — usually resolved through your provider's <code>include:</code> — and passes or fails the message on the <code>MAIL FROM</code> (envelope) domain.</p>
+<pre><code><span class="tok-name">example.com.</span>  <span class="tok-type">IN TXT</span>  <span class="tok-str">"v=spf1 include:amazonses.com include:mailgun.org -all"</span></code></pre>
+<p>The <code>-all</code> at the end is a hard fail: "if the sender isn't in this list, reject it." Prefer <code>-all</code> over the softer <code>~all</code> once you're confident every legitimate source is included. One caveat: SPF permits at most ten DNS lookups, so don't stack endless <code>include:</code> entries.</p>
+
+<h3>DKIM — sign your mail cryptographically</h3>
+<p>DomainKeys Identified Mail (DKIM) adds a digital signature to every message. Your sending service holds a private key and signs a hash of the headers and body; you publish the matching public key in DNS under a <em>selector</em>. The receiver fetches the public key, verifies the signature, and confirms the message wasn't altered in transit and genuinely originated from your domain.</p>
+<pre><code><span class="tok-name">s1._domainkey.example.com.</span>  <span class="tok-type">IN TXT</span>  <span class="tok-str">"v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEB..."</span></code></pre>
+<p>The <code>s1</code> is the selector, so you can rotate keys or run several providers side by side, each with its own record. Your ESP generates the key pair and gives you the public half to publish — you never handle the private key yourself.</p>
+
+<h3>DMARC — tie it together and get reports</h3>
+<p>DMARC is the policy layer. It tells receivers what to do when a message fails authentication, and — crucially — it requires <em>alignment</em>: the domain in the visible <code>From:</code> header must match the domain validated by SPF or DKIM. That alignment check is what actually stops spoofing, because SPF and DKIM on their own validate envelope and signing domains the recipient never sees.</p>
+<pre><code><span class="tok-name">_dmarc.example.com.</span>  <span class="tok-type">IN TXT</span>  <span class="tok-str">"v=DMARC1; p=none; rua=mailto:dmarc@example.com; adkim=s; aspf=s"</span></code></pre>
+<p>Roll DMARC out in stages. Start at <code>p=none</code> — this enforces nothing but sends you daily aggregate reports (<code>rua</code>) so you can see who's sending as you and confirm your legitimate streams pass. Once the reports look clean, move to <code>p=quarantine</code> (failing mail goes to spam), then to <code>p=reject</code> (failing mail is refused outright).</p>
+<table>
+  <thead><tr><th>Policy</th><th>What receivers do on failure</th><th>Use it when</th></tr></thead>
+  <tbody>
+    <tr><td><code>p=none</code></td><td>Nothing — deliver and report</td><td>Monitoring; discovering your real senders</td></tr>
+    <tr><td><code>p=quarantine</code></td><td>Route to spam/junk</td><td>Reports are clean; ready to filter spoofers</td></tr>
+    <tr><td><code>p=reject</code></td><td>Reject at SMTP time</td><td>Full confidence; maximum protection</td></tr>
+  </tbody>
+</table>
+<p>Since February 2024, Gmail and Yahoo <em>require</em> SPF, DKIM, and a DMARC record (at least <code>p=none</code>) from anyone sending bulk mail, along with one-click unsubscribe and a complaint rate kept under 0.3%. These are no longer nice-to-haves.</p>
+
+<div class="callout"><strong>Tip:</strong> Stand up all three records and sit at <code>p=none</code> for two to four weeks before enforcing. The aggregate reports almost always surface a forgotten sender — a billing system, a helpdesk, an old marketing tool — that you'll want aligned before <code>quarantine</code> starts filtering it.</p></div>
+
+<h2>Reputation and warmup</h2>
+<p>Once you're authenticated, providers track how your domain and IP behave over time. Send wanted mail that people engage with and your reputation climbs; generate bounces and complaints and it sinks — dragging inbox placement down with it.</p>
+<p>New sending identities start with <em>no</em> reputation, which filters treat with suspicion. A brand-new domain that suddenly blasts 50,000 messages looks exactly like a compromised account. So you warm up: start with a few hundred sends a day to your most engaged recipients, then roughly double the volume every few days over two to four weeks, watching bounce and complaint rates as you go.</p>
+<p>Whether you need a <strong>dedicated IP</strong> depends on volume. Dedicated IPs give you full control of your own reputation but must be warmed and fed consistent volume — below roughly 50,000–100,000 messages a month they often perform worse than a well-managed shared pool, because there isn't enough traffic to establish a stable signal. Most senders should stay on their provider's shared IPs until volume justifies the move. Either way, consistency matters: steady daily volume reads as healthy; erratic spikes read as spam.</p>
+
+<h2>List hygiene</h2>
+<p>Your list is the single biggest lever on reputation, and a bad one will sink you no matter how clean your DNS is. The rules are simple and non-negotiable:</p>
+<ul>
+  <li><strong>Use confirmed opt-in.</strong> Only mail people who explicitly asked to hear from you. Never send to purchased or scraped lists — they're full of spam traps that get you blocklisted.</li>
+  <li><strong>Remove hard bounces immediately.</strong> A hard bounce means the address doesn't exist. Continuing to send to it signals that you don't clean your list, which is a classic spammer tell.</li>
+  <li><strong>Suppress complainers instantly.</strong> If someone marks you as spam, never mail them again. Wire up your provider's feedback loop so this happens automatically.</li>
+  <li><strong>Prune the chronically unengaged.</strong> Recipients who haven't opened anything in six months drag down your engagement average. Try a re-engagement campaign, then let the rest go.</li>
+</ul>
+
+<h2>Content and engagement</h2>
+<p>Content filters are less about magic "spam words" than they used to be, but patterns still hurt: all-caps subject lines, link shorteners, a single giant image with no text, mismatched or hidden links. Always include a plain, visible unsubscribe link — hiding it drives people to hit "report spam" instead, which is far more damaging than a quiet opt-out.</p>
+<p>Engagement is the real currency. Opens, clicks, and replies tell providers your mail is wanted, and that feedback loops straight back into reputation. This is exactly why subject lines are worth obsessing over — a better subject lifts opens, and higher opens lift placement. It's a good candidate for <a href="ab-testing-emails-guide.html">A/B testing</a> so you're optimizing on data, not hunches.</p>
+
+<h2>Separate your streams</h2>
+<p>Don't send password resets from the same reputation as your weekly newsletter. Transactional mail is expected and heavily engaged; marketing mail gets more complaints and unsubscribes. Mixing them lets marketing's noise pollute the reputation your critical transactional mail depends on. The fix is to split them onto separate subdomains — say <code>mail.example.com</code> for marketing and <code>notify.example.com</code> for transactional — each with its own authentication and its own reputation. Our guide on <a href="transactional-vs-marketing-email.html">transactional vs marketing email</a> covers where to draw the line. Triggering transactional mail directly <a href="event-based-emails-laravel.html">from application events</a> also keeps it timely and consistent, which is exactly the steady, wanted signal that builds a strong sending reputation.</p>
+
+<h2>Monitor it</h2>
+<p>Deliverability isn't set-and-forget; it drifts, and you want to catch it early. Watch your bounce rate (keep it under ~2%) and complaint rate (under 0.1%, and well under Gmail's 0.3% ceiling). Enroll in <strong>Google Postmaster Tools</strong> for a direct read on your domain reputation and spam rate at Gmail. Run periodic seed tests to see where you land across providers. And actually read your DMARC aggregate reports — they're the early-warning system for spoofing and for legitimate senders quietly failing alignment.</p>
+
+<h2>What about SMS and push?</h2>
+<p>Reputation isn't unique to email. Carriers score the sender IDs and short codes behind <a href="sms-notifications-laravel.html">SMS</a>, and push platforms track how often users disable your notifications. The same discipline applies everywhere: send wanted, well-targeted messages and honor opt-outs. This is one reason a single <a href="marketing-automation-explained.html">marketing automation platform</a> that tracks delivery across every channel beats stitching together per-channel point tools — you see the whole picture in one place. <a href="https://github.com/Trigger-engage/trigger-engage">Trigger Engage</a> takes that approach: it's open source, self-hostable, and free, and it sends email over any SMTP provider you choose — SES, Mailgun, Postmark, and the rest — so the sending reputation you build stays entirely yours.</p>
+
+<h2>Frequently asked questions</h2>
+<div class="faq">
+  <details><summary>Why are my emails going to spam?</summary><div class="a">Almost always one of three things: missing or broken authentication (SPF, DKIM, DMARC), poor domain or IP reputation from bounces and complaints, or low engagement because the list is stale or the content is unwanted. Start by confirming all three DNS records pass, then audit your list and bounce handling.</div></details>
+  <details><summary>What are SPF, DKIM, and DMARC?</summary><div class="a">They're three DNS records that authenticate your mail. SPF lists which servers may send for your domain. DKIM cryptographically signs each message so receivers can verify it's genuine and unaltered. DMARC ties the two to your visible <code>From:</code> address, tells receivers what to do when authentication fails, and sends you reports. You want all three — they're required for bulk senders at Gmail and Yahoo.</div></details>
+  <details><summary>Do I need a dedicated IP address?</summary><div class="a">Only at scale. Dedicated IPs make sense above roughly 50,000–100,000 messages a month, where there's enough consistent volume to build a stable reputation. Below that, a warmed shared IP pool from your provider almost always delivers better, because a low-volume dedicated IP never accumulates enough signal.</div></details>
+  <details><summary>How do I warm up a new sending domain?</summary><div class="a">Authenticate it first, then ramp volume gradually. Begin with a few hundred messages a day to your most engaged recipients, roughly doubling every few days over two to four weeks. Watch bounce and complaint rates and slow down if either climbs. Consistent daily volume to people who open your mail is what builds reputation fastest.</div></details>
+</div>
+</article>
+    <aside class="cta-box">
+      <h3>Own your lifecycle messaging</h3>
+      <p>Trigger Engage is free, open source, and self-hostable — send email, SMS &amp; push based on what your users do, with no per-user bill.</p>
+      <div class="btns">
+        <a class="btn btn-primary" href="https://github.com/Trigger-engage/server/blob/main/docs/INSTALLATION.md">Get started</a>
+        <a class="btn btn-ghost" href="https://github.com/Trigger-engage/trigger-engage">View on GitHub</a>
+      </div>
+    </aside>
+    <section class="related">
+      <h2>Keep reading</h2>
+      <div class="related-grid">
+        <a href="transactional-vs-marketing-email.html"><span class="cat">Guide</span><strong>Transactional vs Marketing Email</strong></a>
+        <a href="sms-notifications-laravel.html"><span class="cat">Tutorial</span><strong>How to Send SMS Notifications in Laravel</strong></a>
+        <a href="ab-testing-emails-guide.html"><span class="cat">Guide</span><strong>A/B Testing Emails: A Practical Guide</strong></a>
+      </div>
+    </section>
+  </div>
+</main>
+<footer class="site"><div class="wrap foot">
+  <a class="brand" href="../index.html"><span class="mark">TE</span><span>Trigger Engage</span></a>
+  <div class="links">
+    <a href="../index.html">Home</a><a href="index.html">Blog</a>
+    <a href="https://github.com/Trigger-engage/server/tree/main/docs">Docs</a>
+    <a href="https://github.com/Trigger-engage/trigger-engage">GitHub</a>
+  </div>
+  <span class="copy">© 2026 Trigger Engage · MIT licensed</span>
+</div></footer>
+</body>
+</html>

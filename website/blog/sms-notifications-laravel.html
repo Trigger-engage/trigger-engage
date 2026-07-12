@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Canonical / OG base URL: https://triggerengage.com -->
+<title>How to Send SMS Notifications in Laravel | Trigger Engage</title>
+<meta name="description" content="A practical guide to sending SMS notifications in Laravel — from a quick driver setup to event-driven, multi-channel messaging that scales.">
+<link rel="canonical" href="https://triggerengage.com/blog/sms-notifications-laravel.html">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How to Send SMS Notifications in Laravel">
+<meta property="og:description" content="A practical guide to sending SMS notifications in Laravel — from a quick driver setup to event-driven, multi-channel messaging that scales.">
+<meta property="og:url" content="https://triggerengage.com/blog/sms-notifications-laravel.html">
+<meta property="article:published_time" content="2026-07-06">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How to Send SMS Notifications in Laravel">
+<meta name="twitter:description" content="A practical guide to sending SMS notifications in Laravel — from a quick driver setup to event-driven, multi-channel messaging that scales.">
+<link rel="stylesheet" href="blog.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"How to Send SMS Notifications in Laravel","description":"A practical guide to sending SMS notifications in Laravel — from a quick driver setup to event-driven, multi-channel messaging that scales.","datePublished":"2026-07-06","dateModified":"2026-07-06","author":{"@type":"Organization","name":"Trigger Engage","url":"https://triggerengage.com"},"publisher":{"@type":"Organization","name":"Trigger Engage"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://triggerengage.com/blog/sms-notifications-laravel.html"},"keywords":"laravel sms, send sms laravel, laravel sms notifications, laravel notifications sms"}
+</script>
+<meta property="og:site_name" content="Trigger Engage">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://triggerengage.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Trigger Engage — automated email, SMS &amp; push, no per-user bill">
+<meta name="twitter:image" content="https://triggerengage.com/assets/og-image.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#070b14">
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/instrument-sans-600.woff2" crossorigin>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I send SMS in Laravel?", "acceptedAnswer": {"@type": "Answer", "text": "The quickest path is Laravel's Notification system: create a notification class, list an SMS channel in its via() method, and configure a driver for your provider with an API key and sender ID. Call $user->notify(...) to send. For more control you can POST directly to your provider's send endpoint with the Http facade."}}, {"@type": "Question", "name": "What's the best way to send SMS notifications at scale?", "acceptedAnswer": {"@type": "Answer", "text": "Move from per-message code to an event-driven model: emit one event describing what happened and let a messaging engine decide the channel and timing. This centralizes sequencing, opt-out handling, and analytics instead of scattering delayed jobs and branching logic across your codebase. Always queue the actual sends."}}, {"@type": "Question", "name": "How do I handle SMS opt-outs?", "acceptedAnswer": {"@type": "Answer", "text": "Include an opt-out instruction (commonly \"reply STOP\") in your messages, capture inbound STOP replies, and immediately flag that profile as unsubscribed so no further SMS is sent. Store consent and opt-out state per user, and check it before every send. This is a legal requirement in most regions, not a nicety."}}, {"@type": "Question", "name": "Can I send SMS and email from the same event?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — that is the main advantage of the event-driven approach. You fire a single event against a user profile, and the journey fans it out to whatever channels make sense: SMS for the urgent nudge, email for the detail, push for the reminder. A tool like Trigger Engage keeps all three keyed to one profile so they stay coordinated."}}]}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://triggerengage.com/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://triggerengage.com/blog/"}, {"@type": "ListItem", "position": 3, "name": "How to Send SMS Notifications in Laravel", "item": "https://triggerengage.com/blog/sms-notifications-laravel.html"}]}
+</script>
+</head>
+<body>
+<header class="nav"><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><span class="mark">TE</span><span>Trigger&nbsp;Engage</span></a>
+  <nav class="nav-links" aria-label="Primary">
+    <a href="../index.html#features">Features</a>
+    <a href="../index.html#pricing">Pricing</a>
+    <a href="https://github.com/Trigger-engage/server/tree/main/docs">Docs</a>
+    <a href="index.html" aria-current="page">Blog</a>
+  </nav>
+  <div class="nav-cta"><a class="btn btn-primary" href="https://github.com/Trigger-engage/server/blob/main/docs/INSTALLATION.md">Get started</a></div>
+</div></header>
+<main>
+  <div class="article">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="../index.html">Home</a> &rsaquo; <a href="index.html">Blog</a> &rsaquo; Tutorial</nav>
+    <header class="article-head">
+      <div class="kicker">Tutorial</div>
+      <h1>How to Send SMS Notifications in Laravel</h1>
+      <div class="meta"><span>July 6, 2026</span><span class="dot"></span><span>9 min read</span><span class="dot"></span><span>The Trigger Engage team</span></div>
+    </header>
+    <article class="prose">
+<p>SMS cuts through in a way almost nothing else does — a text lands in seconds and gets opened around 98% of the time, far more reliably than email ever will. That is exactly why teams reach for it for one-time passcodes, urgent alerts, and appointment reminders. This guide shows you how to send SMS notifications in Laravel, starting with a five-minute driver setup and building up to event-driven, multi-channel messaging that scales.</p>
+
+<h2>When to use SMS (and when not to)</h2>
+<p>SMS is a premium channel. Every message costs money, lands in a deeply personal inbox, and is subject to strict consent rules. Use it where its speed and reach genuinely earn the intrusion:</p>
+<ul>
+  <li><strong>Two-factor authentication and OTPs</strong> — the message is only useful for a minute or two, so instant delivery matters.</li>
+  <li><strong>Delivery and appointment alerts</strong> — "your driver is 5 minutes away" or "your session starts in 30 minutes."</li>
+  <li><strong>Payment and account issues</strong> — a failed charge or a security event where you need the user to act now.</li>
+</ul>
+<p>SMS is a poor fit for long-form content, rich formatting, or marketing blasts. There is no room to explain, no images, and a promotional text to someone who never asked for it is the fastest way to earn a spam complaint and lose your sender reputation. Keep SMS short, expected, and high-priority. For anything longer or less urgent, lean on <a href="event-based-emails-laravel.html">event-based emails in Laravel</a> or <a href="push-notifications-laravel.html">push notifications</a> instead.</p>
+
+<h2>Option A: Laravel notifications with an SMS channel</h2>
+<p>Laravel's built-in Notification system is the cleanest starting point. A notification is a single class that can define multiple delivery channels, so the same "your appointment is confirmed" event can go out over mail, database, and SMS from one place. Community notification channels exist for all the major SMS providers, and each one gives you a driver you configure with credentials and a sender ID.</p>
+<p>Generate a notification with <code>php artisan make:notification AppointmentReminder</code>, then declare SMS in its <code>via()</code> method and describe the message in a provider-specific method:</p>
+<pre><code><span class="c-key">use</span> Illuminate\Bus\Queueable;
+<span class="c-key">use</span> Illuminate\Contracts\Queue\ShouldQueue;
+<span class="c-key">use</span> Illuminate\Notifications\Notification;
+
+<span class="c-key">class</span> AppointmentReminder <span class="c-key">extends</span> Notification <span class="c-key">implements</span> ShouldQueue
+{
+    <span class="c-key">use</span> Queueable;
+
+    <span class="c-key">public</span> <span class="c-key">function</span> <span class="c-fn">__construct</span>(<span class="c-key">public</span> string $startsAt) {}
+
+    <span class="c-cm">// Which channels this notification goes out on</span>
+    <span class="c-key">public</span> <span class="c-key">function</span> <span class="c-fn">via</span>($notifiable): array
+    {
+        <span class="c-key">return</span> [<span class="c-str">'sms'</span>]; <span class="c-cm">// the driver key registered by your channel package</span>
+    }
+
+    <span class="c-cm">// The SMS payload — keep it short and specific</span>
+    <span class="c-key">public</span> <span class="c-key">function</span> <span class="c-fn">toSms</span>($notifiable)
+    {
+        <span class="c-key">return</span> <span class="c-str">"Reminder: your session starts at {$this->startsAt}. Reply STOP to opt out."</span>;
+    }
+}</code></pre>
+<p>Send it with <code>$user-&gt;notify(new AppointmentReminder($startsAt))</code>, and make sure your notifiable model exposes the phone number the driver expects (commonly a <code>routeNotificationForSms()</code> method). Because the class implements <code>ShouldQueue</code>, the actual API call to the provider happens on a queue worker rather than blocking the web request — which keeps your response times fast even when the provider is slow.</p>
+
+<div class="callout"><strong>Tip:</strong> Always queue SMS notifications. Provider APIs add network latency you do not control, and a slow carrier route should never hold up the HTTP request the user is waiting on. Implement <code>ShouldQueue</code> and run at least one queue worker in production.</div>
+
+<h2>Option B: call an SMS API directly</h2>
+<p>If you want full control — or your provider has no maintained notification channel — call the send endpoint yourself with Laravel's HTTP client. This is just a POST with your credentials, the destination number, a sender ID, and the message body:</p>
+<pre><code><span class="c-key">use</span> Illuminate\Support\Facades\Http;
+
+<span class="c-key">public</span> <span class="c-key">function</span> <span class="c-fn">sendSms</span>(string $to, string $message): void
+{
+    <span class="c-cm">// Endpoint and payload shape depend on your provider's docs</span>
+    $response = Http::<span class="c-fn">asJson</span>()-&gt;<span class="c-fn">post</span>(<span class="c-str">'https://api.your-provider.com/v1/messages'</span>, [
+        <span class="c-str">'api_key'</span>  =&gt; config(<span class="c-str">'services.sms.key'</span>),
+        <span class="c-str">'to'</span>       =&gt; $to,
+        <span class="c-str">'from'</span>     =&gt; config(<span class="c-str">'services.sms.sender'</span>),
+        <span class="c-str">'sms'</span>      =&gt; $message,
+    ]);
+
+    <span class="c-cm">// You own error handling here — nothing retries for you</span>
+    <span class="c-key">if</span> ($response-&gt;<span class="c-fn">failed</span>()) {
+        <span class="c-fn">report</span>(<span class="c-key">new</span> \RuntimeException(<span class="c-str">'SMS send failed: '</span> . $response-&gt;<span class="c-fn">body</span>()));
+    }
+}</code></pre>
+<p>Keep your API key in <code>config/services.php</code> and the <code>.env</code> file, never hard-coded. The trade-off with the direct approach is that retries, timeouts, error logging, and delivery-status tracking are all now your responsibility. Wrap the call in a queued job so a failed send can retry with backoff rather than disappearing.</p>
+
+<h2>The limits of DIY for sequences</h2>
+<p>Both options above are perfect for firing a single, self-contained alert. They start to strain the moment you need a <em>sequence</em>. Consider a booking flow: confirm by SMS immediately, remind 24 hours before by email, nudge again by push an hour before, and stop everything the moment the user cancels. Hand-rolling that means juggling delayed jobs, tracking per-user state, deduplicating across channels, honoring opt-outs everywhere, and stitching together analytics. Each new step multiplies the branching logic, and it is easy to double-send or leak a message to someone who already unsubscribed.</p>
+
+<h2>Option C: event-driven SMS inside a journey</h2>
+<p>The scalable pattern is to stop deciding <em>how</em> to message from inside your application code and instead emit a single event describing <em>what happened</em>. A messaging engine then owns the decision of whether to send SMS, email, or push — and when. Your app fires one event; the journey does the rest.</p>
+<p>This is where SMS pairs naturally with <a href="event-based-emails-laravel.html">event-based email</a> and <a href="push-notifications-laravel.html">push</a> in a single flow, and where well-timed nudges help you <a href="reduce-churn-automated-messaging.html">reduce churn</a> instead of adding noise. <a href="https://github.com/Trigger-engage/trigger-engage">Trigger Engage</a> is one open-source, MIT-licensed option built for exactly this — self-hostable or embeddable in a Laravel app via <code>composer require trigger-engage/server</code>, with a Laravel SDK that keeps the call site tiny:</p>
+<pre><code><span class="c-key">use</span> TriggerEngage\Facades\TriggerEngage;
+
+<span class="c-cm">// Attach known traits to the profile (idempotent, safe to repeat)</span>
+TriggerEngage::<span class="c-fn">identify</span>($user-&gt;id, [
+    <span class="c-str">'phone'</span> =&gt; $user-&gt;phone,
+    <span class="c-str">'email'</span> =&gt; $user-&gt;email,
+]);
+
+<span class="c-cm">// Fire one event — the journey decides SMS vs email vs push, and timing</span>
+TriggerEngage::<span class="c-fn">event</span>($user-&gt;id, <span class="c-str">'appointment.booked'</span>, [
+    <span class="c-str">'starts_at'</span> =&gt; $appointment-&gt;starts_at,
+]);</code></pre>
+<p>The SDK is fail-open, queued, and idempotent, so a messaging outage never takes down your booking flow, and a retried event will not double-send. Channels cover email (SMTP, SES, Mailgun, Postmark), SMS through an SMS provider integration, and push via OneSignal — all keyed to the same profile, with no per-profile fee. Your application code stays focused on business logic while the sequence, timing, and channel selection live in one place.</p>
+
+<h3>Comparing the three approaches</h3>
+<table>
+  <thead>
+    <tr><th>Approach</th><th>Best for</th><th>You manage</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Notification + SMS channel</td><td>Single alerts, clean Laravel-native code</td><td>Driver config, phone routing</td></tr>
+    <tr><td>Direct API call</td><td>Full control, unusual providers</td><td>Retries, errors, delivery tracking</td></tr>
+    <tr><td>Event-driven journey</td><td>Multi-step, multi-channel sequences</td><td>One event call; engine owns the rest</td></tr>
+  </tbody>
+</table>
+
+<h2>Compliance &amp; deliverability</h2>
+<p>SMS is heavily regulated, and carriers police it aggressively. A few non-negotiables:</p>
+<ul>
+  <li><strong>Get explicit consent</strong> before you text anyone. Opt-in must be clear and recorded — an implied "they gave us their number" is not enough.</li>
+  <li><strong>Honor STOP and opt-out</strong> instantly. Include an opt-out instruction and suppress future sends to anyone who uses it.</li>
+  <li><strong>Use approved sender IDs</strong> registered with your provider and carriers, so your messages route correctly instead of being filtered.</li>
+  <li><strong>Respect DND routes</strong> and local do-not-disturb rules — some regions block promotional traffic to registered numbers entirely.</li>
+</ul>
+<p>Almost all SMS you send this way is <a href="transactional-vs-marketing-email.html">transactional rather than marketing</a> — a direct response to something the user did. Keep it that way. And treat your SMS sender reputation with the same care that protects email <a href="email-deliverability-guide.html">deliverability</a>: send expected, relevant messages to engaged recipients, and carriers will keep delivering them.</p>
+
+<h2>Testing</h2>
+<p>You never want a test suite firing real texts and burning credits. Point your SMS driver at a fake or log implementation in the testing environment so messages are written to the log (or captured in memory) instead of sent. With Laravel notifications you can go further and use <code>Notification::fake()</code>, then assert that the right notification was queued to the right user:</p>
+<pre><code><span class="c-key">use</span> Illuminate\Support\Facades\Notification;
+
+Notification::<span class="c-fn">fake</span>();
+
+<span class="c-cm">// ...trigger the booking flow under test...</span>
+
+Notification::<span class="c-fn">assertSentTo</span>($user, AppointmentReminder::class);</code></pre>
+<p>This verifies your logic without touching the provider at all, keeping tests fast, free, and deterministic.</p>
+
+<h2>Frequently asked questions</h2>
+<div class="faq">
+  <details><summary>How do I send SMS in Laravel?</summary><div class="a">The quickest path is Laravel's Notification system: create a notification class, list an SMS channel in its <code>via()</code> method, and configure a driver for your provider with an API key and sender ID. Call <code>$user-&gt;notify(...)</code> to send. For more control you can POST directly to your provider's send endpoint with the <code>Http</code> facade.</div></details>
+  <details><summary>What's the best way to send SMS notifications at scale?</summary><div class="a">Move from per-message code to an event-driven model: emit one event describing what happened and let a messaging engine decide the channel and timing. This centralizes sequencing, opt-out handling, and analytics instead of scattering delayed jobs and branching logic across your codebase. Always queue the actual sends.</div></details>
+  <details><summary>How do I handle SMS opt-outs?</summary><div class="a">Include an opt-out instruction (commonly "reply STOP") in your messages, capture inbound STOP replies, and immediately flag that profile as unsubscribed so no further SMS is sent. Store consent and opt-out state per user, and check it before every send. This is a legal requirement in most regions, not a nicety.</div></details>
+  <details><summary>Can I send SMS and email from the same event?</summary><div class="a">Yes — that is the main advantage of the event-driven approach. You fire a single event against a user profile, and the journey fans it out to whatever channels make sense: SMS for the urgent nudge, email for the detail, push for the reminder. A tool like Trigger Engage keeps all three keyed to one profile so they stay coordinated.</div></details>
+</div>
+    </article>
+    <aside class="cta-box">
+      <h3>Own your lifecycle messaging</h3>
+      <p>Trigger Engage is free, open source, and self-hostable — send email, SMS &amp; push based on what your users do, with no per-user bill.</p>
+      <div class="btns">
+        <a class="btn btn-primary" href="https://github.com/Trigger-engage/server/blob/main/docs/INSTALLATION.md">Get started</a>
+        <a class="btn btn-ghost" href="https://github.com/Trigger-engage/trigger-engage">View on GitHub</a>
+      </div>
+    </aside>
+    <section class="related">
+      <h2>Keep reading</h2>
+      <div class="related-grid">
+        <a href="push-notifications-laravel.html"><span class="cat">Tutorial</span><strong>How to Send Push Notifications in Laravel</strong></a>
+        <a href="event-based-emails-laravel.html"><span class="cat">Tutorial</span><strong>How to Send Event-Based Emails in Laravel</strong></a>
+        <a href="transactional-vs-marketing-email.html"><span class="cat">Guide</span><strong>Transactional vs Marketing Email</strong></a>
+      </div>
+    </section>
+  </div>
+</main>
+<footer class="site"><div class="wrap foot">
+  <a class="brand" href="../index.html"><span class="mark">TE</span><span>Trigger Engage</span></a>
+  <div class="links">
+    <a href="../index.html">Home</a><a href="index.html">Blog</a>
+    <a href="https://github.com/Trigger-engage/server/tree/main/docs">Docs</a>
+    <a href="https://github.com/Trigger-engage/trigger-engage">GitHub</a>
+  </div>
+  <span class="copy">© 2026 Trigger Engage · MIT licensed</span>
+</div></footer>
+</body>
+</html>

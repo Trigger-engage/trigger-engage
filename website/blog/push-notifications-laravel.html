@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Canonical / OG base URL: https://triggerengage.com -->
+<title>How to Send Push Notifications in Laravel | Trigger Engage</title>
+<meta name="description" content="How to send push notifications in Laravel — set up a provider, send from events, and trigger push as part of an automated multi-channel journey.">
+<link rel="canonical" href="https://triggerengage.com/blog/push-notifications-laravel.html">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How to Send Push Notifications in Laravel">
+<meta property="og:description" content="How to send push notifications in Laravel — set up a provider, send from events, and trigger push as part of an automated multi-channel journey.">
+<meta property="og:url" content="https://triggerengage.com/blog/push-notifications-laravel.html">
+<meta property="article:published_time" content="2026-07-05">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How to Send Push Notifications in Laravel">
+<meta name="twitter:description" content="How to send push notifications in Laravel — set up a provider, send from events, and trigger push as part of an automated multi-channel journey.">
+<link rel="stylesheet" href="blog.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"How to Send Push Notifications in Laravel","description":"How to send push notifications in Laravel — set up a provider, send from events, and trigger push as part of an automated multi-channel journey.","datePublished":"2026-07-05","dateModified":"2026-07-05","author":{"@type":"Organization","name":"Trigger Engage","url":"https://triggerengage.com"},"publisher":{"@type":"Organization","name":"Trigger Engage"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://triggerengage.com/blog/push-notifications-laravel.html"},"keywords":"laravel push notifications, send push notification laravel, laravel onesignal, web push laravel"}
+</script>
+<meta property="og:site_name" content="Trigger Engage">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://triggerengage.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Trigger Engage — automated email, SMS &amp; push, no per-user bill">
+<meta name="twitter:image" content="https://triggerengage.com/assets/og-image.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#070b14">
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/instrument-sans-600.woff2" crossorigin>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I send push notifications in Laravel?", "acceptedAnswer": {"@type": "Answer", "text": "Store a device token or subscription for each user, then either use a Laravel Notification class with a push channel in via(), or POST to a provider's API with the Http client. Queue the send so a slow provider call never blocks the request, and keep the payload to a title, body, and deep-link URL so you stay provider-agnostic."}}, {"@type": "Question", "name": "Web push vs mobile push — what's the difference?", "acceptedAnswer": {"@type": "Answer", "text": "Web push runs through the browser via a service worker and a stored subscription, and works even when your tab is closed. Mobile push targets native iOS and Android apps through APNs and FCM using device tokens. In both cases Laravel talks to a push service, not the device directly, so a provider that abstracts all three keeps your code simple."}}, {"@type": "Question", "name": "How often should I send push notifications?", "acceptedAnswer": {"@type": "Answer", "text": "As rarely as you can while still being useful. Set a per-user frequency cap, respect quiet hours, and only send to users a message genuinely applies to. Over-notifying is one of the top causes of uninstalls, so err toward fewer, better-timed, well-segmented pushes."}}, {"@type": "Question", "name": "Can I send push, email, and SMS from one event?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — that is the recommended pattern. Fire a single event describing what happened and let a messaging engine choose the channels. With Trigger Engage you call TriggerEngage::event() once, and a configured journey can send email, SMS, and push (via OneSignal) on whatever schedule you define, with no per-channel logic in your app code."}}]}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://triggerengage.com/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://triggerengage.com/blog/"}, {"@type": "ListItem", "position": 3, "name": "How to Send Push Notifications in Laravel", "item": "https://triggerengage.com/blog/push-notifications-laravel.html"}]}
+</script>
+</head>
+<body>
+<header class="nav"><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><span class="mark">TE</span><span>Trigger&nbsp;Engage</span></a>
+  <nav class="nav-links" aria-label="Primary">
+    <a href="../index.html#features">Features</a>
+    <a href="../index.html#pricing">Pricing</a>
+    <a href="https://github.com/Trigger-engage/server/tree/main/docs">Docs</a>
+    <a href="index.html" aria-current="page">Blog</a>
+  </nav>
+  <div class="nav-cta"><a class="btn btn-primary" href="https://github.com/Trigger-engage/server/blob/main/docs/INSTALLATION.md">Get started</a></div>
+</div></header>
+<main>
+  <div class="article">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="../index.html">Home</a> &rsaquo; <a href="index.html">Blog</a> &rsaquo; Tutorial</nav>
+    <header class="article-head">
+      <div class="kicker">Tutorial</div>
+      <h1>How to Send Push Notifications in Laravel</h1>
+      <div class="meta"><span>July 5, 2026</span><span class="dot"></span><span>9 min read</span><span class="dot"></span><span>The Trigger Engage team</span></div>
+    </header>
+    <article class="prose">
+<p>Push notifications pull people back into your app — but only if you send the right one at the right time. Done well, they are the highest-signal channel you have: a tap away from the exact screen a user needs. Done badly, they are the fastest way to earn an uninstall. This guide shows you how to <strong>send push notifications in Laravel</strong> and, more importantly, how to wire them into automated journeys so each one is timely and relevant instead of noise.</p>
+
+<h2>Web push vs mobile push</h2>
+<p>"Push" covers two different delivery paths, and it helps to keep them straight before you write any code.</p>
+<p><strong>Web push</strong> runs in the browser. A visitor grants permission, the browser registers a <em>service worker</em>, and you receive a subscription object (an endpoint URL plus encryption keys) that you store server-side. You then POST an encrypted payload to that endpoint, and the browser's push service wakes the service worker to show the notification — even when your tab is closed. It works in Chrome, Firefox, Edge, and (since recent versions) Safari on macOS and iOS for installed web apps.</p>
+<p><strong>Mobile push</strong> targets native iOS and Android apps. Here the operating system owns delivery: Apple Push Notification service (APNs) for iOS, Firebase Cloud Messaging (FCM) for Android. Each installed app instance hands you a <em>device token</em>, and you send messages to Apple or Google, who deliver to the device.</p>
+<p>In both cases your Laravel app never talks to the device directly — it talks to a push service, keyed by a token or subscription you stored against a user. Managing APNs certificates and FCM keys by hand is fiddly, so most teams put a provider in between that abstracts both.</p>
+
+<h2>Choose a provider</h2>
+<p>A push provider manages the parts you do not want to own: device-token storage, APNs/FCM credentials, retries, and delivery reporting. OneSignal is a common choice because it handles iOS, Android, and web push behind one API; you can also talk to FCM and APNs directly if you prefer no middleman.</p>
+<p>Whatever you pick, your side of the contract is the same: keep a mapping between your <em>users</em> and their <em>devices</em>. When someone logs in on a phone, you associate that device (or the provider's "player"/subscription id) with the user record. That mapping is what lets you say "notify user 4821" instead of juggling raw tokens.</p>
+
+<table>
+  <thead><tr><th>Path</th><th>Delivery service</th><th>What you store</th></tr></thead>
+  <tbody>
+    <tr><td>Web push</td><td>Browser push service (via VAPID)</td><td>Subscription endpoint + keys</td></tr>
+    <tr><td>iOS</td><td>APNs</td><td>Device token</td></tr>
+    <tr><td>Android</td><td>FCM</td><td>Registration token</td></tr>
+    <tr><td>Any (abstracted)</td><td>Provider e.g. OneSignal</td><td>Player / external user id</td></tr>
+  </tbody>
+</table>
+
+<h2>Option A: Laravel notifications with a push channel</h2>
+<p>Laravel's notification system is the cleanest home for push. You define a <code>Notification</code> class, list a push channel in <code>via()</code>, and build the payload in a <code>to...()</code> method. Queue it so a slow provider call never blocks the request.</p>
+<pre><code><span class="c-key">use</span> Illuminate\Bus\Queueable;
+<span class="c-key">use</span> Illuminate\Notifications\Notification;
+
+<span class="c-key">class</span> <span class="c-fn">SessionReminder</span> <span class="c-key">extends</span> Notification <span class="c-key">implements</span> ShouldQueue
+{
+    <span class="c-key">use</span> Queueable;
+
+    <span class="c-key">public function</span> <span class="c-fn">via</span>(<span class="c-key">$notifiable</span>): <span class="c-key">array</span>
+    {
+        <span class="c-key">return</span> [<span class="c-str">'onesignal'</span>]; <span class="c-cm">// or your custom push channel</span>
+    }
+
+    <span class="c-key">public function</span> <span class="c-fn">toOneSignal</span>(<span class="c-key">$notifiable</span>)
+    {
+        <span class="c-key">return</span> [
+            <span class="c-str">'title'</span> =&gt; <span class="c-str">'Your session starts soon'</span>,
+            <span class="c-str">'body'</span>  =&gt; <span class="c-str">'Tap to join — your therapist is ready.'</span>,
+            <span class="c-str">'url'</span>   =&gt; <span class="c-str">'myapp://session/'</span> . <span class="c-key">$this</span>->sessionId,
+        ];
+    }
+}</code></pre>
+<p>Trigger it with <code>$user-&gt;notify(new SessionReminder($id))</code>. The channel package reads the user's stored device/player id from a <code>routeNotificationFor...()</code> method on your <code>User</code> model. Keep the payload provider-agnostic — a title, a body, and a deep-link URL are all you truly need — so swapping providers later is a config change, not a rewrite. Store the provider key and app id in <code>config/services.php</code>, never inline.</p>
+
+<div class="callout"><strong>Tip:</strong> Always queue push notifications. Provider APIs occasionally take a second or two, and you never want a user's request — or an event handler — waiting on a third-party HTTP call. Queueing also gives you free retries when the provider hiccups.</div>
+
+<h2>Option B: call the provider API directly</h2>
+<p>If you do not want a channel package, or you are targeting a whole segment rather than one user, call the provider's HTTP endpoint yourself with Laravel's <code>Http</code> client.</p>
+<pre><code><span class="c-key">use</span> Illuminate\Support\Facades\Http;
+
+Http::<span class="c-fn">withToken</span>(config(<span class="c-str">'services.push.key'</span>))
+    -&gt;<span class="c-fn">post</span>(<span class="c-str">'https://provider.example/api/v1/notifications'</span>, [
+        <span class="c-str">'app_id'</span>            =&gt; config(<span class="c-str">'services.push.app_id'</span>),
+        <span class="c-str">'include_external_ids'</span> =&gt; [(<span class="c-key">string</span>) <span class="c-key">$user</span>->id],
+        <span class="c-str">'headings'</span>          =&gt; [<span class="c-str">'en'</span> =&gt; <span class="c-str">'We saved your spot'</span>],
+        <span class="c-str">'contents'</span>          =&gt; [<span class="c-str">'en'</span> =&gt; <span class="c-str">'Finish booking in two taps.'</span>],
+    ]);</code></pre>
+<p>This is fine for one-off blasts, but notice what it encourages: <code>send</code> calls scattered across controllers and jobs. That gets hard to reason about the moment you add a second channel.</p>
+
+<h2>Send push from events (as part of a journey)</h2>
+<p>The better pattern is to stop calling "send push" from your business logic at all. Instead, fire a single <em>event</em> that describes what happened — <code>session_booked</code>, <code>trial_ending</code>, <code>cart_abandoned</code> — and let a messaging engine decide which channels to use and when. Push then sits alongside <a href="event-based-emails-laravel.html">email</a> and <a href="sms-notifications-laravel.html">SMS</a> as one output of the same trigger, instead of a call you have to remember to make.</p>
+<p>That is exactly what <a href="https://github.com/Trigger-engage/trigger-engage">Trigger Engage</a> does — an open-source, MIT-licensed engine you self-host or embed in Laravel (<code>composer require trigger-engage/server</code>), with a first-party SDK for identifying users and emitting events. Push is delivered through OneSignal, and there is no per-profile fee.</p>
+<pre><code><span class="c-key">use</span> TriggerEngage\Laravel\TriggerEngage;
+
+TriggerEngage::<span class="c-fn">identify</span>(<span class="c-key">$user</span>->id, [
+    <span class="c-str">'email'</span> =&gt; <span class="c-key">$user</span>->email,
+    <span class="c-str">'name'</span>  =&gt; <span class="c-key">$user</span>->name,
+]);
+
+TriggerEngage::<span class="c-fn">event</span>(<span class="c-key">$user</span>->id, <span class="c-str">'session_booked'</span>, [
+    <span class="c-str">'session_id'</span> =&gt; <span class="c-key">$id</span>,
+    <span class="c-str">'starts_at'</span>  =&gt; <span class="c-key">$startsAt</span>,
+]);</code></pre>
+<p>The SDK is <em>fail-open</em>: if the engine is unreachable, your booking still succeeds — messaging never becomes a hard dependency of your core flow. A journey configured for <code>session_booked</code> might send a confirmation email immediately and a push reminder 30 minutes before the session, with no send logic living in your controller.</p>
+
+<h2>Push best practices</h2>
+<p>Push is a privilege the user grants, and they can revoke it instantly by muting or uninstalling. Protect it.</p>
+<ul>
+  <li><strong>Ask permission at the right moment.</strong> Never prompt on first load, before the user understands your value. Ask right after a moment that makes notifications obviously useful — after booking, after a first success, after opting into reminders.</li>
+  <li><strong>Cap frequency.</strong> Set a per-user ceiling and honour quiet hours. A single well-timed push beats five interruptions.</li>
+  <li><strong>Deep-link to the relevant screen.</strong> A notification that dumps the user on your home screen wastes the tap. Include a URL that lands them exactly where the message points.</li>
+  <li><strong>Segment so it is relevant.</strong> Send to the users a message actually applies to. Over-notifying drives uninstalls — the exact opposite of what you want when you are trying to <a href="reduce-churn-automated-messaging.html">reduce churn</a>.</li>
+</ul>
+
+<h2>Where push fits in the lifecycle</h2>
+<p>Push is powerful but narrow: it is short, it is interruptive, and it only reaches users who installed your app and kept notifications on. That makes it a supporting channel, not a standalone strategy. Its real strength shows when it is one instrument in a broader <a href="lifecycle-email-sequences.html">lifecycle sequence</a> — email carries the detail, SMS catches the time-critical moments, and push nudges an engaged user back at just the right second. Think of it as one channel inside your wider <a href="marketing-automation-explained.html">marketing automation</a> approach, chosen per message rather than defaulted to. Fire events, let the engine pick the channel, and push earns its place instead of wearing out its welcome.</p>
+
+<div class="faq">
+  <details><summary>How do I send push notifications in Laravel?</summary><div class="a">Store a device token or subscription for each user, then either use a Laravel <code>Notification</code> class with a push channel in <code>via()</code>, or POST to a provider's API with the <code>Http</code> client. Queue the send so a slow provider call never blocks the request, and keep the payload to a title, body, and deep-link URL so you stay provider-agnostic.</div></details>
+  <details><summary>Web push vs mobile push — what's the difference?</summary><div class="a">Web push runs through the browser via a service worker and a stored subscription, and works even when your tab is closed. Mobile push targets native iOS and Android apps through APNs and FCM using device tokens. In both cases Laravel talks to a push service, not the device directly, so a provider that abstracts all three keeps your code simple.</div></details>
+  <details><summary>How often should I send push notifications?</summary><div class="a">As rarely as you can while still being useful. Set a per-user frequency cap, respect quiet hours, and only send to users a message genuinely applies to. Over-notifying is one of the top causes of uninstalls, so err toward fewer, better-timed, well-segmented pushes.</div></details>
+  <details><summary>Can I send push, email, and SMS from one event?</summary><div class="a">Yes — that is the recommended pattern. Fire a single event describing what happened and let a messaging engine choose the channels. With Trigger Engage you call <code>TriggerEngage::event()</code> once, and a configured journey can send email, SMS, and push (via OneSignal) on whatever schedule you define, with no per-channel logic in your app code.</div></details>
+</div>
+    </article>
+    <aside class="cta-box">
+      <h3>Own your lifecycle messaging</h3>
+      <p>Trigger Engage is free, open source, and self-hostable — send email, SMS &amp; push based on what your users do, with no per-user bill.</p>
+      <div class="btns">
+        <a class="btn btn-primary" href="https://github.com/Trigger-engage/server/blob/main/docs/INSTALLATION.md">Get started</a>
+        <a class="btn btn-ghost" href="https://github.com/Trigger-engage/trigger-engage">View on GitHub</a>
+      </div>
+    </aside>
+    <section class="related">
+      <h2>Keep reading</h2>
+      <div class="related-grid">
+        <a href="sms-notifications-laravel.html"><span class="cat">Tutorial</span><strong>How to Send SMS Notifications in Laravel</strong></a>
+        <a href="event-based-emails-laravel.html"><span class="cat">Tutorial</span><strong>How to Send Event-Based Emails in Laravel</strong></a>
+        <a href="reduce-churn-automated-messaging.html"><span class="cat">Guide</span><strong>How to Reduce Churn with Automated Messaging</strong></a>
+      </div>
+    </section>
+  </div>
+</main>
+<footer class="site"><div class="wrap foot">
+  <a class="brand" href="../index.html"><span class="mark">TE</span><span>Trigger Engage</span></a>
+  <div class="links">
+    <a href="../index.html">Home</a><a href="index.html">Blog</a>
+    <a href="https://github.com/Trigger-engage/server/tree/main/docs">Docs</a>
+    <a href="https://github.com/Trigger-engage/trigger-engage">GitHub</a>
+  </div>
+  <span class="copy">© 2026 Trigger Engage · MIT licensed</span>
+</div></footer>
+</body>
+</html>
