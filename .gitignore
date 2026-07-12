@@ -1,0 +1,25 @@
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+.zed/
+*.log
+
+# Secrets & local env (never publish)
+.env
+.env.*
+!.env.example
+
+# Dependencies & build caches
+node_modules/
+vendor/
+.phpunit.result.cache
+.phpunit.cache/
+
+# Local databases
+*.sqlite
+*.sqlite-journal
+
+# Local git-history backup of former sub-repos (kept outside the tree, but ignore just in case)
+.te-git-history-backup/
