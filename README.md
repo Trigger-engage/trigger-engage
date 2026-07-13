@@ -1,4 +1,4 @@
-# Trigger Engage
+# TriggerEngage
 
 **Open-source, self-hostable event-based email, SMS & push automation for Laravel** — a
 cost-free alternative to hosted lifecycle-messaging platforms like Customer.io.

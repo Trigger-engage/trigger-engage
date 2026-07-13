@@ -1,11 +1,11 @@
-# Trigger Engage
+# TriggerEngage
 
 > Open-source, self-hostable, event-based email, SMS & push automation for Laravel — a free alternative to hosted lifecycle-messaging platforms like Customer.io. Fire an event from your app, build the journey visually, and let the engine deliver, with no per-user bill.
 
-Trigger Engage is MIT-licensed. Run it standalone or embed the whole dashboard and engine inside an existing Laravel app with one Composer command (`composer require trigger-engage/server`). It includes a visual journey builder, behavioral segments that recompute themselves, A/B testing, anonymous-to-identified profile merge, and a time-series analytics dashboard. Channels: email (SMTP, SES, Mailgun, Postmark), SMS (Termii), and push (OneSignal). The Laravel SDK is fail-open: `identify()` and `event()` never throw into your app.
+TriggerEngage is MIT-licensed. Run it standalone or embed the whole dashboard and engine inside an existing Laravel app with one Composer command (`composer require trigger-engage/server`). It includes a visual journey builder, behavioral segments that recompute themselves, A/B testing, anonymous-to-identified profile merge, and a time-series analytics dashboard. Channels: email (SMTP, SES, Mailgun, Postmark), SMS (Termii), and push (OneSignal). The Laravel SDK is fail-open: `identify()` and `event()` never throw into your app.
 
 ## Product
-- [Landing page](https://triggerengage.com/): what Trigger Engage is, features, and pricing (free)
+- [Landing page](https://triggerengage.com/): what TriggerEngage is, features, and pricing (free)
 - [Server / platform (GitHub)](https://github.com/Trigger-engage/server): the API, automation engine, and dashboard
 - [Laravel SDK (GitHub)](https://github.com/Trigger-engage/laravel-sdk): identify/track client with a test fake
 - [Documentation](https://github.com/Trigger-engage/server/tree/main/docs): concepts, guides, HTTP API reference

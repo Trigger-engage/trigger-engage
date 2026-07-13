@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Canonical / OG base URL: https://triggerengage.com -->
-<title>How to Send Event-Based Emails in Laravel | Trigger Engage</title>
+<title>How to Send Event-Based Emails in Laravel | TriggerEngage</title>
 <meta name="description" content="A step-by-step guide to sending event-based email, SMS, and push in Laravel — fire events from your app and trigger automated journeys, without a per-user bill.">
 <link rel="canonical" href="https://triggerengage.com/blog/event-based-emails-laravel.html">
 <meta name="robots" content="index,follow">
@@ -18,17 +18,17 @@
 <meta name="twitter:description" content="A step-by-step guide to sending event-based email, SMS, and push in Laravel — fire events from your app and trigger automated journeys, without a per-user bill.">
 <link rel="stylesheet" href="blog.css">
 <script type="application/ld+json">
-{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "How to Send Event-Based Emails in Laravel (Step-by-Step)", "description": "A step-by-step guide to sending event-based email, SMS, and push in Laravel — fire events from your app and trigger automated journeys, without a per-user bill.", "datePublished": "2026-07-10", "dateModified": "2026-07-10", "author": {"@type": "Organization", "name": "Trigger Engage", "url": "https://triggerengage.com/blog/authors/trigger-engage-team.html"}, "publisher": {"@type": "Organization", "name": "Trigger Engage"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://triggerengage.com/blog/event-based-emails-laravel.html"}, "keywords": "laravel event-based email, laravel lifecycle emails, laravel automated emails, send email on user action laravel", "image": "https://triggerengage.com/assets/blog/event-based-emails-laravel.png"}
+{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "How to Send Event-Based Emails in Laravel (Step-by-Step)", "description": "A step-by-step guide to sending event-based email, SMS, and push in Laravel — fire events from your app and trigger automated journeys, without a per-user bill.", "datePublished": "2026-07-10", "dateModified": "2026-07-10", "author": {"@type": "Organization", "name": "TriggerEngage", "url": "https://triggerengage.com/blog/authors/trigger-engage-team.html"}, "publisher": {"@type": "Organization", "name": "TriggerEngage"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://triggerengage.com/blog/event-based-emails-laravel.html"}, "keywords": "laravel event-based email, laravel lifecycle emails, laravel automated emails, send email on user action laravel", "image": "https://triggerengage.com/assets/blog/event-based-emails-laravel.png"}
 </script>
 <script type="application/ld+json">
-{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I send an email when a user signs up in Laravel?", "acceptedAnswer": {"@type": "Answer", "text": "Generate a Mailable with php artisan make:mail, dispatch a domain event (or use Laravel's Registered event) after you create the user, and have a listener call Mail::to(...)->send(...). Make the Mailable implement ShouldQueue so the send happens on a queue worker and doesn't slow the signup request."}}, {"@type": "Question", "name": "What's the difference between transactional and event-based emails?", "acceptedAnswer": {"@type": "Answer", "text": "Transactional emails are one-to-one reactions to a single action — a receipt, a password reset, an order confirmation. Event-based (lifecycle) emails also start from user actions but can span multiple steps over time, with delays, conditions, and goals: welcome, wait, nudge, convert. Every transactional email is technically event-based, but \"event-based\" usually implies a multi-step journey rather than a single send."}}, {"@type": "Question", "name": "Do I need a third-party service for event-based emails?", "acceptedAnswer": {"@type": "Answer", "text": "No. For simple one-off automated emails, native Laravel events, listeners, and mailables are enough. You reach for an engine when you need delays, multi-step sequences, branching, segmentation, A/B testing, or SMS and push from the same profile. With an open-source, self-hostable engine like Trigger Engage you get those capabilities without handing your customer data — or a per-user bill — to an external SaaS."}}, {"@type": "Question", "name": "How do I test event-based emails in Laravel?", "acceptedAnswer": {"@type": "Answer", "text": "Use Mail::fake() with Mail::assertQueued() to verify a mailable would be sent without actually sending it. If you're firing events into an engine, use the SDK's TriggerEngage::fake() with assertEventSent() so your tests assert the right events were tracked without touching the network or a real mail provider."}}]}
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I send an email when a user signs up in Laravel?", "acceptedAnswer": {"@type": "Answer", "text": "Generate a Mailable with php artisan make:mail, dispatch a domain event (or use Laravel's Registered event) after you create the user, and have a listener call Mail::to(...)->send(...). Make the Mailable implement ShouldQueue so the send happens on a queue worker and doesn't slow the signup request."}}, {"@type": "Question", "name": "What's the difference between transactional and event-based emails?", "acceptedAnswer": {"@type": "Answer", "text": "Transactional emails are one-to-one reactions to a single action — a receipt, a password reset, an order confirmation. Event-based (lifecycle) emails also start from user actions but can span multiple steps over time, with delays, conditions, and goals: welcome, wait, nudge, convert. Every transactional email is technically event-based, but \"event-based\" usually implies a multi-step journey rather than a single send."}}, {"@type": "Question", "name": "Do I need a third-party service for event-based emails?", "acceptedAnswer": {"@type": "Answer", "text": "No. For simple one-off automated emails, native Laravel events, listeners, and mailables are enough. You reach for an engine when you need delays, multi-step sequences, branching, segmentation, A/B testing, or SMS and push from the same profile. With an open-source, self-hostable engine like TriggerEngage you get those capabilities without handing your customer data — or a per-user bill — to an external SaaS."}}, {"@type": "Question", "name": "How do I test event-based emails in Laravel?", "acceptedAnswer": {"@type": "Answer", "text": "Use Mail::fake() with Mail::assertQueued() to verify a mailable would be sent without actually sending it. If you're firing events into an engine, use the SDK's TriggerEngage::fake() with assertEventSent() so your tests assert the right events were tracked without touching the network or a real mail provider."}}]}
 </script>
-<meta property="og:site_name" content="Trigger Engage">
+<meta property="og:site_name" content="TriggerEngage">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://triggerengage.com/assets/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Trigger Engage — automated email, SMS &amp; push, no per-user bill">
+<meta property="og:image:alt" content="TriggerEngage — automated email, SMS &amp; push, no per-user bill">
 <meta name="twitter:image" content="https://triggerengage.com/assets/og-image.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
@@ -42,7 +42,7 @@
 </head>
 <body>
 <header class="nav"><div class="wrap nav-in">
-  <a class="brand" href="../index.html"><span class="mark">TE</span><span>Trigger&nbsp;Engage</span></a>
+  <a class="brand" href="../index.html"><span class="mark">TE</span><span>TriggerEngage</span></a>
   <nav class="nav-links" aria-label="Primary">
     <a href="../index.html#features">Features</a>
     <a href="../index.html#pricing">Pricing</a>
@@ -57,7 +57,7 @@
     <header class="article-head">
       <div class="kicker">Tutorial</div>
       <h1>How to Send Event-Based Emails in Laravel (Step-by-Step)</h1>
-      <div class="meta"><span>July 10, 2026</span><span class="dot"></span><span>11 min read</span><span class="dot"></span><a class="author-link" href="authors/trigger-engage-team.html">The Trigger Engage team</a></div>
+      <div class="meta"><span>July 10, 2026</span><span class="dot"></span><span>11 min read</span><span class="dot"></span><a class="author-link" href="authors/trigger-engage-team.html">The TriggerEngage team</a></div>
     </header>
     <article class="prose">
 <p class="lead">Newsletters blast everyone on a schedule. <strong>Event-based emails</strong> do the opposite: they react to what a user actually does — a signup, a first purchase, an abandoned checkout step. In <strong>Laravel</strong>, you can build them two ways, and this guide walks both: a quick DIY version using native events and mailables, then a full journey engine for when one-off emails aren't enough.</p>
@@ -121,7 +121,7 @@
 
 <h2>Option B: fire events into a messaging engine</h2>
 <p>Instead of hand-coding each sequence, you can send events to an automation engine and build the journeys visually. The mental model flips: your Laravel app stops owning the "when to send what" logic entirely. It just calls <strong>identify</strong> and <strong>track</strong>. The engine owns the delays, branches, sends, and multi-channel delivery — and you edit those without shipping code.</p>
-<p>With Trigger Engage you can pull in just the SDK, or embed the whole engine inside your own app so no customer data leaves your infrastructure:</p>
+<p>With TriggerEngage you can pull in just the SDK, or embed the whole engine inside your own app so no customer data leaves your infrastructure:</p>
 <pre><code><span class="c-cm"># Just the client SDK</span>
 composer require trigger-engage/laravel
 
@@ -174,19 +174,19 @@ TriggerEngage::<span class="c-fn">assertEventSent</span>(<span class="c-str">'cu
 <p>This keeps your journey wiring under test without a running engine or a real mail provider, which matters once you're branching and splitting traffic for <a href="ab-testing-emails-guide.html">A/B testing your emails</a>.</p>
 
 <h2>Self-host or SaaS</h2>
-<p>Because Trigger Engage is open source, you're not locked into a hosted vendor. You can run it as a standalone self-hosted service, or embed it directly in your Laravel app so customer data never leaves your infrastructure. Either way there's no per-profile fee — the thing that makes traditional lifecycle platforms expensive precisely as you succeed and your user base grows. You own the data, the templates, and the journeys.</p>
+<p>Because TriggerEngage is open source, you're not locked into a hosted vendor. You can run it as a standalone self-hosted service, or embed it directly in your Laravel app so customer data never leaves your infrastructure. Either way there's no per-profile fee — the thing that makes traditional lifecycle platforms expensive precisely as you succeed and your user base grows. You own the data, the templates, and the journeys.</p>
 
 <h2>Frequently asked questions</h2>
 <div class="faq">
   <details><summary>How do I send an email when a user signs up in Laravel?</summary><div class="a">Generate a Mailable with <code>php artisan make:mail</code>, dispatch a domain event (or use Laravel's <code>Registered</code> event) after you create the user, and have a listener call <code>Mail::to(...)-&gt;send(...)</code>. Make the Mailable implement <code>ShouldQueue</code> so the send happens on a queue worker and doesn't slow the signup request.</div></details>
   <details><summary>What's the difference between transactional and event-based emails?</summary><div class="a">Transactional emails are one-to-one reactions to a single action — a receipt, a password reset, an order confirmation. Event-based (lifecycle) emails also start from user actions but can span multiple steps over time, with delays, conditions, and goals: welcome, wait, nudge, convert. Every transactional email is technically event-based, but "event-based" usually implies a multi-step journey rather than a single send.</div></details>
-  <details><summary>Do I need a third-party service for event-based emails?</summary><div class="a">No. For simple one-off automated emails, native Laravel events, listeners, and mailables are enough. You reach for an engine when you need delays, multi-step sequences, branching, segmentation, A/B testing, or SMS and push from the same profile. With an open-source, self-hostable engine like Trigger Engage you get those capabilities without handing your customer data — or a per-user bill — to an external SaaS.</div></details>
+  <details><summary>Do I need a third-party service for event-based emails?</summary><div class="a">No. For simple one-off automated emails, native Laravel events, listeners, and mailables are enough. You reach for an engine when you need delays, multi-step sequences, branching, segmentation, A/B testing, or SMS and push from the same profile. With an open-source, self-hostable engine like TriggerEngage you get those capabilities without handing your customer data — or a per-user bill — to an external SaaS.</div></details>
   <details><summary>How do I test event-based emails in Laravel?</summary><div class="a">Use <code>Mail::fake()</code> with <code>Mail::assertQueued()</code> to verify a mailable would be sent without actually sending it. If you're firing events into an engine, use the SDK's <code>TriggerEngage::fake()</code> with <code>assertEventSent()</code> so your tests assert the right events were tracked without touching the network or a real mail provider.</div></details>
 </div>
     </article>
     <aside class="cta-box">
       <h3>Own your lifecycle messaging</h3>
-      <p>Trigger Engage is free, open source, and self-hostable — send email, SMS &amp; push based on what your users do, with no per-user bill.</p>
+      <p>TriggerEngage is free, open source, and self-hostable — send email, SMS &amp; push based on what your users do, with no per-user bill.</p>
       <div class="btns">
         <a class="btn btn-primary" href="https://github.com/Trigger-engage/server/blob/main/docs/INSTALLATION.md">Get started</a>
         <a class="btn btn-ghost" href="https://github.com/Trigger-engage/trigger-engage">View on GitHub</a>
@@ -203,13 +203,13 @@ TriggerEngage::<span class="c-fn">assertEventSent</span>(<span class="c-str">'cu
   </div>
 </main>
 <footer class="site"><div class="wrap foot">
-  <a class="brand" href="../index.html"><span class="mark">TE</span><span>Trigger Engage</span></a>
+  <a class="brand" href="../index.html"><span class="mark">TE</span><span>TriggerEngage</span></a>
   <div class="links">
     <a href="../index.html">Home</a><a href="index.html">Blog</a>
     <a href="https://github.com/Trigger-engage/server/tree/main/docs">Docs</a>
     <a href="https://github.com/Trigger-engage/trigger-engage">GitHub</a>
   </div>
-  <span class="copy">© 2026 Trigger Engage · MIT licensed</span>
+  <span class="copy">© 2026 TriggerEngage · MIT licensed</span>
 </div></footer>
 </body>
 </html>

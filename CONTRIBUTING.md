@@ -1,4 +1,4 @@
-# Contributing to Trigger Engage
+# Contributing to TriggerEngage
 
 Thanks for helping make open-source lifecycle messaging better. This guide covers the dev
 setup, the test suite, and the conventions we follow. Issues and pull requests are welcome.

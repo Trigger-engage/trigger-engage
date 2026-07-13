@@ -1,6 +1,6 @@
 {
-  "name": "Trigger Engage",
-  "short_name": "Trigger Engage",
+  "name": "TriggerEngage",
+  "short_name": "TriggerEngage",
   "description": "Open-source, self-hostable email, SMS & push automation for Laravel.",
   "start_url": "/",
   "display": "standalone",

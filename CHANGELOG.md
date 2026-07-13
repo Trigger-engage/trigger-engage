@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to Trigger Engage are documented here. The format follows
+All notable changes to TriggerEngage are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project aims to follow
 semantic versioning once it reaches 1.0. Dates are ISO-8601.
 
@@ -38,7 +38,7 @@ Four capabilities closing the biggest gaps against hosted lifecycle-messaging pl
 
 ## [0.4.0] — Dogfood — planned
 
-Point the Mytherapist.ng backend at Trigger Engage behind `CustomerIoService`, run in shadow
+Point the Mytherapist.ng backend at TriggerEngage behind `CustomerIoService`, run in shadow
 mode alongside Customer.io, compare, and cut over. See [PRODUCTION.md](https://github.com/Trigger-engage/server/blob/main/PRODUCTION.md).
 
 ## [0.38.0] — Dual-mode distribution

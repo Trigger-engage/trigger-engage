@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Canonical / OG base URL: https://triggerengage.com -->
-<title>Email Deliverability: SPF, DKIM & DMARC | Trigger Engage</title>
+<title>Email Deliverability: SPF, DKIM & DMARC | TriggerEngage</title>
 <meta name="description" content="A developer's guide to email deliverability — SPF, DKIM, DMARC, warmup, list hygiene, and the technical setup that keeps your email out of spam.">
 <link rel="canonical" href="https://triggerengage.com/blog/email-deliverability-guide.html">
 <meta name="robots" content="index,follow,max-image-preview:large">
@@ -18,14 +18,14 @@
 <meta name="twitter:description" content="A developer's guide to email deliverability — SPF, DKIM, DMARC, warmup, list hygiene, and the technical setup that keeps your email out of spam.">
 <link rel="stylesheet" href="blog.css">
 <script type="application/ld+json">
-{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Email Deliverability: A Developer's Guide to SPF, DKIM & DMARC", "description": "A developer's guide to email deliverability — SPF, DKIM, DMARC, warmup, list hygiene, and the technical setup that keeps your email out of spam.", "datePublished": "2026-07-01", "dateModified": "2026-07-01", "author": {"@type": "Organization", "name": "Trigger Engage", "url": "https://triggerengage.com/blog/authors/trigger-engage-team.html"}, "publisher": {"@type": "Organization", "name": "Trigger Engage"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://triggerengage.com/blog/email-deliverability-guide.html"}, "keywords": "email deliverability, spf dkim dmarc, email authentication, avoid spam folder", "image": "https://triggerengage.com/assets/blog/email-deliverability-guide.png"}
+{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Email Deliverability: A Developer's Guide to SPF, DKIM & DMARC", "description": "A developer's guide to email deliverability — SPF, DKIM, DMARC, warmup, list hygiene, and the technical setup that keeps your email out of spam.", "datePublished": "2026-07-01", "dateModified": "2026-07-01", "author": {"@type": "Organization", "name": "TriggerEngage", "url": "https://triggerengage.com/blog/authors/trigger-engage-team.html"}, "publisher": {"@type": "Organization", "name": "TriggerEngage"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://triggerengage.com/blog/email-deliverability-guide.html"}, "keywords": "email deliverability, spf dkim dmarc, email authentication, avoid spam folder", "image": "https://triggerengage.com/assets/blog/email-deliverability-guide.png"}
 </script>
-<meta property="og:site_name" content="Trigger Engage">
+<meta property="og:site_name" content="TriggerEngage">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://triggerengage.com/assets/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Trigger Engage — automated email, SMS &amp; push, no per-user bill">
+<meta property="og:image:alt" content="TriggerEngage — automated email, SMS &amp; push, no per-user bill">
 <meta name="twitter:image" content="https://triggerengage.com/assets/og-image.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
@@ -42,7 +42,7 @@
 </head>
 <body>
 <header class="nav"><div class="wrap nav-in">
-  <a class="brand" href="../index.html"><span class="mark">TE</span><span>Trigger&nbsp;Engage</span></a>
+  <a class="brand" href="../index.html"><span class="mark">TE</span><span>TriggerEngage</span></a>
   <nav class="nav-links" aria-label="Primary">
     <a href="../index.html#features">Features</a>
     <a href="../index.html#pricing">Pricing</a>
@@ -57,7 +57,7 @@
     <header class="article-head">
       <div class="kicker">Guide</div>
       <h1>Email Deliverability: A Developer's Guide to SPF, DKIM & DMARC</h1>
-      <div class="meta"><span>July 1, 2026</span><span class="dot"></span><span>11 min read</span><span class="dot"></span><a class="author-link" href="authors/trigger-engage-team.html">The Trigger Engage team</a></div>
+      <div class="meta"><span>July 1, 2026</span><span class="dot"></span><span>11 min read</span><span class="dot"></span><a class="author-link" href="authors/trigger-engage-team.html">The TriggerEngage team</a></div>
     </header>
     <article class="prose">
 <p><strong>Email deliverability is the difference between a message that lands in the inbox and one that nobody ever sees.</strong> You can write the perfect onboarding sequence, but if it drops into the spam folder — or gets rejected at the door — none of that work matters. The good news for developers: most spam-folder problems are technical, and technical problems are fixable. This is the practical guide to the DNS records, reputation signals, and list habits that keep your email arriving.</p>
@@ -127,7 +127,7 @@
 <p>Deliverability isn't set-and-forget; it drifts, and you want to catch it early. Watch your bounce rate (keep it under ~2%) and complaint rate (under 0.1%, and well under Gmail's 0.3% ceiling). Enroll in <strong>Google Postmaster Tools</strong> for a direct read on your domain reputation and spam rate at Gmail. Run periodic seed tests to see where you land across providers. And actually read your DMARC aggregate reports — they're the early-warning system for spoofing and for legitimate senders quietly failing alignment.</p>
 
 <h2>What about SMS and push?</h2>
-<p>Reputation isn't unique to email. Carriers score the sender IDs and short codes behind <a href="sms-notifications-laravel.html">SMS</a>, and push platforms track how often users disable your notifications. The same discipline applies everywhere: send wanted, well-targeted messages and honor opt-outs. This is one reason a single <a href="marketing-automation-explained.html">marketing automation platform</a> that tracks delivery across every channel beats stitching together per-channel point tools — you see the whole picture in one place. <a href="https://github.com/Trigger-engage/trigger-engage">Trigger Engage</a> takes that approach: it's open source, self-hostable, and free, and it sends email over any SMTP provider you choose — SES, Mailgun, Postmark, and the rest — so the sending reputation you build stays entirely yours.</p>
+<p>Reputation isn't unique to email. Carriers score the sender IDs and short codes behind <a href="sms-notifications-laravel.html">SMS</a>, and push platforms track how often users disable your notifications. The same discipline applies everywhere: send wanted, well-targeted messages and honor opt-outs. This is one reason a single <a href="marketing-automation-explained.html">marketing automation platform</a> that tracks delivery across every channel beats stitching together per-channel point tools — you see the whole picture in one place. <a href="https://github.com/Trigger-engage/trigger-engage">TriggerEngage</a> takes that approach: it's open source, self-hostable, and free, and it sends email over any SMTP provider you choose — SES, Mailgun, Postmark, and the rest — so the sending reputation you build stays entirely yours.</p>
 
 <h2>Frequently asked questions</h2>
 <div class="faq">
@@ -139,7 +139,7 @@
 </article>
     <aside class="cta-box">
       <h3>Own your lifecycle messaging</h3>
-      <p>Trigger Engage is free, open source, and self-hostable — send email, SMS &amp; push based on what your users do, with no per-user bill.</p>
+      <p>TriggerEngage is free, open source, and self-hostable — send email, SMS &amp; push based on what your users do, with no per-user bill.</p>
       <div class="btns">
         <a class="btn btn-primary" href="https://github.com/Trigger-engage/server/blob/main/docs/INSTALLATION.md">Get started</a>
         <a class="btn btn-ghost" href="https://github.com/Trigger-engage/trigger-engage">View on GitHub</a>
@@ -156,13 +156,13 @@
   </div>
 </main>
 <footer class="site"><div class="wrap foot">
-  <a class="brand" href="../index.html"><span class="mark">TE</span><span>Trigger Engage</span></a>
+  <a class="brand" href="../index.html"><span class="mark">TE</span><span>TriggerEngage</span></a>
   <div class="links">
     <a href="../index.html">Home</a><a href="index.html">Blog</a>
     <a href="https://github.com/Trigger-engage/server/tree/main/docs">Docs</a>
     <a href="https://github.com/Trigger-engage/trigger-engage">GitHub</a>
   </div>
-  <span class="copy">© 2026 Trigger Engage · MIT licensed</span>
+  <span class="copy">© 2026 TriggerEngage · MIT licensed</span>
 </div></footer>
 </body>
 </html>
