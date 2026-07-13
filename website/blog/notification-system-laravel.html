@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Canonical / OG base URL: https://triggerengage.com -->
+<title>How to Build a Notification System in Laravel | TriggerEngage</title>
+<meta name="description" content="Design a multi-channel notification system in Laravel — notification classes, channel routing, queues, user preferences, and when to graduate to an engagement platform.">
+<link rel="canonical" href="https://triggerengage.com/blog/notification-system-laravel.html">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How to Build a Notification System in Laravel">
+<meta property="og:description" content="Design a multi-channel notification system in Laravel — notification classes, channel routing, queues, user preferences, and when to graduate to an engagement platform.">
+<meta property="og:url" content="https://triggerengage.com/blog/notification-system-laravel.html">
+<meta property="article:published_time" content="2026-07-13">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How to Build a Notification System in Laravel">
+<meta name="twitter:description" content="Design a multi-channel notification system in Laravel — notification classes, channel routing, queues, and user preferences.">
+<link rel="stylesheet" href="blog.css">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "How to Build a Notification System in Laravel", "description": "Design a multi-channel notification system in Laravel — notification classes, channel routing, queues, user preferences, and when to graduate to an engagement platform.", "datePublished": "2026-07-13", "dateModified": "2026-07-13", "author": {"@type": "Organization", "name": "TriggerEngage", "url": "https://triggerengage.com/blog/authors/trigger-engage-team.html"}, "publisher": {"@type": "Organization", "name": "TriggerEngage"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://triggerengage.com/blog/notification-system-laravel.html"}, "keywords": "laravel notification system, laravel notifications, multi-channel notifications, notification channels", "image": "https://triggerengage.com/assets/blog/notification-system-laravel.png"}
+</script>
+<meta property="og:site_name" content="TriggerEngage">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://triggerengage.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="TriggerEngage — automated email, SMS &amp; push, no per-user bill">
+<meta name="twitter:image" content="https://triggerengage.com/assets/og-image.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#070b14">
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/instrument-sans-600.woff2" crossorigin>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://triggerengage.com/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://triggerengage.com/blog/"}, {"@type": "ListItem", "position": 3, "name": "How to Build a Notification System in Laravel", "item": "https://triggerengage.com/blog/notification-system-laravel.html"}]}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How does Laravel's notification system work?", "acceptedAnswer": {"@type": "Answer", "text": "Laravel represents each notification as a class whose via() method returns the channels it should be sent over — such as mail, database, or a third-party SMS or push driver. A matching toMail(), toSms(), or toArray() method formats the message for each channel. You then send it with the Notifiable trait's notify() method or the Notification facade."}}, {"@type": "Question", "name": "Should notifications be queued?", "acceptedAnswer": {"@type": "Answer", "text": "Almost always. Implementing ShouldQueue pushes the send to a background worker so the user's request returns immediately and a slow provider never blocks your app. Queuing also gives you automatic retries and isolates failures per channel."}}, {"@type": "Question", "name": "How do I let users choose which notifications they receive?", "acceptedAnswer": {"@type": "Answer", "text": "Store per-user, per-type channel preferences and read them inside via() so each notification decides its channels dynamically. That keeps preference logic in one place and lets a user opt into push but out of email for a given category without touching the notification's content."}}, {"@type": "Question", "name": "When should I move beyond Laravel notifications to an engagement platform?", "acceptedAnswer": {"@type": "Answer", "text": "Laravel notifications are ideal for discrete, code-triggered messages like receipts and alerts. Once you need multi-step journeys, waits and branches, segmentation, A/B tests, and analytics across channels, you have outgrown ad-hoc classes and want an engagement layer that treats messaging as orchestrated flows."}}]}
+</script>
+</head>
+<body>
+<header class="nav"><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><span class="mark">TE</span><span>TriggerEngage</span></a>
+  <nav class="nav-links" aria-label="Primary">
+    <a href="../index.html#features">Features</a>
+    <a href="../index.html#pricing">Pricing</a>
+    <a href="https://github.com/Trigger-engage/server/tree/main/docs">Docs</a>
+    <a href="index.html" aria-current="page">Blog</a>
+  </nav>
+  <div class="nav-cta"><a class="btn btn-primary" href="https://github.com/Trigger-engage/server/blob/main/docs/INSTALLATION.md">Get started</a></div>
+</div></header>
+<main>
+  <div class="article">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="../index.html">Home</a> &rsaquo; <a href="index.html">Blog</a> &rsaquo; Tutorial</nav>
+    <header class="article-head">
+      <div class="kicker">Tutorial</div>
+      <h1>How to Build a Notification System in Laravel</h1>
+      <div class="meta"><span>July 13, 2026</span><span class="dot"></span><span>10 min read</span><span class="dot"></span><a class="author-link" href="authors/trigger-engage-team.html">The TriggerEngage team</a></div>
+    </header>
+    <article class="prose">
+<p class="lead">Every serious app needs to tell users things: your order shipped, someone mentioned you, your payment failed, your trial ends tomorrow. Do it ad hoc — a mail here, an SMS call there — and you end up with delivery logic smeared across controllers, no single place to add a channel, and no way for a user to say "email me, but don't text me." Laravel's notification system gives you a clean alternative: one class per notification, a <code>via()</code> method that decides the channels, and a formatter per channel. This guide builds a <strong>notification system in Laravel</strong> from that core up to queues, user preferences, and the point where you outgrow it.</p>
+<figure class="post-fig"><img src="../assets/blog/notification-system-laravel.png" alt="A Laravel Notification class whose via() method returns mail, sms and push, delivered across all three channels from one event" loading="lazy" width="2000" height="1125"><figcaption>One notification class, one <code>via()</code> method — the same event fans out to every channel a user has opted into.</figcaption></figure>
+
+<h2>The core idea: one class, many channels</h2>
+<p>Laravel models a notification as a single class. Its <code>via()</code> method returns an array of channels the notification should go out on, and a matching method formats the payload for each — <code>toMail()</code> for email, <code>toArray()</code> for the database or a broadcast, and a driver-specific method for SMS or push. The message content lives in one file, and the channels are declared in one place:</p>
+<pre><code><span class="c-key">class</span> <span class="c-fn">OrderShipped</span> <span class="c-key">extends</span> Notification
+{
+    <span class="c-key">public function</span> <span class="c-fn">via</span>($notifiable): <span class="c-key">array</span>
+    {
+        <span class="c-key">return</span> [<span class="c-str">'mail'</span>, <span class="c-str">'sms'</span>, <span class="c-str">'push'</span>];
+    }
+
+    <span class="c-key">public function</span> <span class="c-fn">toMail</span>($notifiable): MailMessage
+    {
+        <span class="c-key">return</span> (<span class="c-key">new</span> MailMessage)
+            -&gt;subject(<span class="c-str">'Your order is on the way'</span>)
+            -&gt;line(<span class="c-str">"Order #{$this->order->id} just shipped."</span>);
+    }
+}</code></pre>
+<p>To send it, you either call <code>$user-&gt;notify(new OrderShipped($order))</code> via the <code>Notifiable</code> trait, or use the <code>Notification</code> facade to reach many recipients at once. That single call fans out to every channel <code>via()</code> returned — no per-channel plumbing in your controller.</p>
+
+<h2>Adding channels beyond mail and database</h2>
+<p>Out of the box Laravel ships mail, database, and broadcast channels. SMS and push arrive through notification channel packages: you install a driver for your provider, add its credentials, implement a <code>toSms()</code> or <code>toPush()</code> method on the notification, and return the channel's class from <code>via()</code>. The recipient tells the channel where to deliver through a <code>routeNotificationForSms()</code> (or equivalent) method on the notifiable model — usually reading a phone number or device token off the user. The mechanics of each channel are worth their own read; see our tutorials on <a href="sms-notifications-laravel.html">sending SMS in Laravel</a> and <a href="push-notifications-laravel.html">sending push notifications in Laravel</a> for provider setup and gotchas.</p>
+
+<div class="callout"><strong>Keep content and routing separate.</strong> The notification class owns <em>what</em> is said; the notifiable model owns <em>where</em> it goes (which address, number, or token). Mixing the two is how you end up hard-coding a phone column into a receipt email and regretting it later.</div>
+
+<h2>Queue everything</h2>
+<p>Sending a notification often means calling an external API — an SMTP server, an SMS gateway, a push service. You do not want any of that happening inside a web request, where a slow provider stalls the response and a failure bubbles up to the user. Implement <code>ShouldQueue</code> on the notification and Laravel pushes the send to a background worker automatically:</p>
+<pre><code><span class="c-key">class</span> <span class="c-fn">OrderShipped</span> <span class="c-key">extends</span> Notification <span class="c-key">implements</span> ShouldQueue
+{
+    <span class="c-key">use</span> Queueable;
+    <span class="c-cm">// ...</span>
+}</code></pre>
+<p>Queuing buys you three things at once: the request returns instantly, each channel retries on transient failure, and a wobble in one provider never takes down the others. For anything beyond a trivial app, treat queued as the default and synchronous as the exception.</p>
+
+<h2>Letting users choose their channels</h2>
+<p>The moment you send more than one kind of notification, users will want control — email for receipts, push for mentions, nothing at all for tips. The clean pattern is to store per-user, per-category channel preferences and read them inside <code>via()</code>, so the notification decides its own channels at send time:</p>
+<pre><code><span class="c-key">public function</span> <span class="c-fn">via</span>($notifiable): <span class="c-key">array</span>
+{
+    <span class="c-key">return</span> $notifiable
+        -&gt;channelsFor(<span class="c-str">'order_updates'</span>); <span class="c-cm">// e.g. ['mail', 'push']</span>
+}</code></pre>
+<p>This keeps preference logic in one place and out of your controllers. It also respects consent by design — if a user opted out of a category, <code>via()</code> simply returns fewer channels and nothing is sent. That same respect for permission underpins healthy email programs; see our guide to <a href="double-opt-in-email-consent.html">email consent</a> for the principles.</p>
+
+<h2>Where Laravel notifications stop being enough</h2>
+<p>Laravel's system is excellent for what it is: discrete, code-triggered messages. A receipt, a password reset, a "someone commented" alert — one event, one send, done. It starts to strain the moment your messaging becomes a <em>journey</em> rather than a single shot. Consider a trial-conversion flow: welcome now, a tips email on day three <em>only if</em> the user hasn't activated, a push on day six, a discount on day thirteen, and everyone exits the instant they upgrade. Expressing that with notification classes and scheduled jobs quickly becomes a tangle of state, timers, and conditionals scattered across your codebase.</p>
+<p>That is the boundary between notifications and engagement. A single alert is a notification; a multi-step, branching, behavior-aware sequence is a <a href="lifecycle-email-sequences.html">lifecycle flow</a>, and it wants a system built for orchestration — waits, branches, segments, A/B splits, and analytics across every channel. You can keep firing the underlying events from Laravel and let that layer decide the messaging. Our tutorial on <a href="event-based-emails-laravel.html">event-based email in Laravel</a> shows the pattern: emit an event from your app, and let an engagement engine handle the journey.</p>
+
+<table>
+  <thead>
+    <tr><th>Use case</th><th>Reach for</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Receipt, alert, password reset</td><td>Laravel Notification class</td></tr>
+    <tr><td>One event, one immediate send</td><td>Laravel Notification class</td></tr>
+    <tr><td>Multi-step onboarding or win-back</td><td>Engagement platform / journey engine</td></tr>
+    <tr><td>Segments, A/B tests, cross-channel analytics</td><td>Engagement platform / journey engine</td></tr>
+  </tbody>
+</table>
+
+<h2>Frequently asked questions</h2>
+<div class="faq">
+  <details><summary>How does Laravel's notification system work?</summary><div class="a">Laravel represents each notification as a class whose via() method returns the channels it should be sent over — such as mail, database, or a third-party SMS or push driver. A matching toMail(), toSms(), or toArray() method formats the message for each channel. You then send it with the Notifiable trait's notify() method or the Notification facade.</div></details>
+  <details><summary>Should notifications be queued?</summary><div class="a">Almost always. Implementing ShouldQueue pushes the send to a background worker so the user's request returns immediately and a slow provider never blocks your app. Queuing also gives you automatic retries and isolates failures per channel.</div></details>
+  <details><summary>How do I let users choose which notifications they receive?</summary><div class="a">Store per-user, per-type channel preferences and read them inside via() so each notification decides its channels dynamically. That keeps preference logic in one place and lets a user opt into push but out of email for a given category without touching the notification's content.</div></details>
+  <details><summary>When should I move beyond Laravel notifications to an engagement platform?</summary><div class="a">Laravel notifications are ideal for discrete, code-triggered messages like receipts and alerts. Once you need multi-step journeys, waits and branches, segmentation, A/B tests, and analytics across channels, you have outgrown ad-hoc classes and want an engagement layer that treats messaging as orchestrated flows.</div></details>
+</div>
+</article>
+    <aside class="cta-box">
+      <h3>From notifications to journeys</h3>
+      <p>TriggerEngage is a free, open-source, self-hostable engagement layer — fire events from Laravel and orchestrate email, SMS &amp; push flows, with no per-user bill.</p>
+      <div class="btns">
+        <a class="btn btn-primary" href="https://github.com/Trigger-engage/server/blob/main/docs/INSTALLATION.md">Get started</a>
+        <a class="btn btn-ghost" href="https://github.com/Trigger-engage/trigger-engage">View on GitHub</a>
+      </div>
+    </aside>
+    <section class="related">
+      <h2>Keep reading</h2>
+      <div class="related-grid">
+        <a href="sms-notifications-laravel.html"><span class="cat">Tutorial</span><strong>How to Send SMS Notifications in Laravel</strong></a>
+        <a href="push-notifications-laravel.html"><span class="cat">Tutorial</span><strong>How to Send Push Notifications in Laravel</strong></a>
+        <a href="event-based-emails-laravel.html"><span class="cat">Tutorial</span><strong>How to Send Event-Based Emails in Laravel</strong></a>
+      </div>
+    </section>
+  </div>
+</main>
+<footer class="site"><div class="wrap foot">
+  <a class="brand" href="../index.html"><span class="mark">TE</span><span>TriggerEngage</span></a>
+  <div class="links">
+    <a href="../index.html">Home</a><a href="index.html">Blog</a>
+    <a href="authors/index.html">Authors</a>
+    <a href="https://github.com/Trigger-engage/server/tree/main/docs">Docs</a>
+    <a href="https://github.com/Trigger-engage/trigger-engage">GitHub</a>
+  </div>
+  <span class="copy">© 2026 TriggerEngage · MIT licensed</span>
+</div></footer>
+</body>
+</html>
