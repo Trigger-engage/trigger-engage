@@ -7,7 +7,11 @@
   var prose = document.querySelector('article.prose');
   if (!prose) return;
 
-  var headings = Array.prototype.slice.call(prose.querySelectorAll('h2, h3'));
+  // Only top-level section headings (direct children of the prose), so nested
+  // card headings — e.g. the "Where X wins" columns on comparison pages — are skipped.
+  var headings = Array.prototype.slice.call(prose.children).filter(function (el) {
+    return el.tagName === 'H2' || el.tagName === 'H3';
+  });
   if (headings.length < 3) return; // short posts don't need a TOC
 
   // Give each heading a stable id (slugified from its text) if it lacks one.
@@ -94,5 +98,23 @@
   // Close the mobile panel after a jump.
   links.forEach(function (a) {
     a.addEventListener('click', function () { if (details.open) details.open = false; });
+  });
+
+  // A "copy link" affordance that appears when you hover a heading.
+  headings.forEach(function (h) {
+    var a = document.createElement('a');
+    a.className = 'head-anchor';
+    a.href = '#' + h.id;
+    a.setAttribute('aria-label', 'Copy link to this section');
+    a.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 15l6-6"/><path d="M11 6l1-1a4 4 0 0 1 6 6l-1 1"/><path d="M13 18l-1 1a4 4 0 0 1-6-6l1-1"/></svg>';
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      var url = location.origin + location.pathname + '#' + h.id;
+      if (history.replaceState) history.replaceState(null, '', '#' + h.id); else location.hash = h.id;
+      function done() { a.classList.add('copied'); setTimeout(function () { a.classList.remove('copied'); }, 1300); }
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, done);
+      else done();
+    });
+    h.appendChild(a);
   });
 })();

@@ -191,3 +191,12 @@ footer.site{border-top:1px solid var(--line);background:var(--ground-2);padding:
 .toc-mobile .toc-list a.active{color:var(--emerald);font-weight:600}
 .prose h3{scroll-margin-top:84px}
 @media(prefers-reduced-motion:reduce){.toc-list a::before,.toc-progress,.toc-mobile summary::after{transition:none}}
+
+/* --- heading "copy link" affordance (toc.js) --- */
+.prose h2,.prose h3{position:relative}
+.prose .head-anchor{position:absolute;left:-1.15em;top:0;bottom:0;margin:auto 0;display:inline-flex;align-items:center;justify-content:center;width:1.15em;height:1.15em;color:var(--faint);opacity:0;border-bottom:0;border-radius:7px;transition:opacity .16s ease,color .16s ease,background .16s ease}
+.prose h2:hover .head-anchor,.prose h3:hover .head-anchor,.prose .head-anchor:focus-visible{opacity:.85}
+.prose .head-anchor:hover{color:var(--emerald);background:rgba(52,211,153,.08)}
+.prose .head-anchor.copied{opacity:1;color:var(--emerald)}
+.prose .head-anchor.copied::after{content:"Link copied";position:absolute;bottom:calc(100% + 7px);left:50%;transform:translateX(-50%);font-size:11px;font-weight:600;letter-spacing:.02em;color:var(--emerald);white-space:nowrap;background:var(--panel);border:1px solid var(--line-2);padding:3px 8px;border-radius:7px;box-shadow:0 10px 24px -10px rgba(0,0,0,.7)}
+@media(hover:none){.prose .head-anchor{display:none}}

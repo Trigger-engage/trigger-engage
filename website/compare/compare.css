@@ -41,3 +41,7 @@ table.matrix .txt{color:var(--muted);font-size:13.5px;line-height:1.4;display:bl
 .col.te li::marker{color:var(--emerald)}
 /* hub cards */
 .cmp-card .rival-tag{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--violet)}
+
+/* table-of-contents fit for the wider (900px) comparison column */
+.toc-float{left:calc((100% - 900px)/2 - 256px)}
+@media(min-width:1280px) and (max-width:1459px){.toc-float{display:none}.toc-mobile{display:block}}
